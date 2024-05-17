@@ -8,7 +8,11 @@ private:
 public:
 	Number_128bit() { int i = 0; while (i < size_of_number) { number_as_array[i] = 0; i++; } }; //default constructor number
 	Number_128bit(const std::string&); //create 128-bit number (constuctor)
-	unsigned int* convert_128number_from_hex(const std::string);
+
+	static unsigned int* convert_128number_from_hex(const std::string);
+
+	unsigned int* return_number_as_array() { return number_as_array; }
+
 	unsigned int not_null_digits_in_number();
 };
 
