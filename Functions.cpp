@@ -28,12 +28,19 @@ unsigned int* Number_128bit::convert_128number_from_hex(const std::string number
 
 unsigned int Number_128bit::not_null_cells_in_number_as_array(){ //amount of digits in number
 	unsigned int current_length = size_of_number;
-	for (; number_as_array[current_length - 1] == 0; current_length--)
+	while(number_as_array[current_length - 1] == 0 && current_length--)
 		if (current_length == 0)
 			break;
 	return current_length;
 }
 
-std::string convert_128number_to_hex(unsigned int* number_as_array) {
+std::string Number_128bit::convert_128number_to_hex(unsigned int* number_as_array) { 
+	unsigned int* logic_order_number_as_array = new unsigned int[size_of_number];
+	int current_position = size_of_number - 1;
+	while (current_position >= 0)
+		logic_order_number_as_array[current_position] = number_as_array[size_of_number - current_position - 1];
+	std::string number_as_hex_string_result;
 
+
+	return number_as_hex_string_result;
 }
