@@ -55,26 +55,33 @@ std::string Number_128bit::convert_128number_to_hex(unsigned int* number_as_arra
 		//current_8bitnumber_in_hex.clear();
 	}
 	unsigned int index_of_first_significant_digit = number_as_hex_string_result.find_first_not_of('0'); // index, before which delete 0
-	std::cout << index_of_first_significant_digit;
 	if (index_of_first_significant_digit != -1) // if not empty string
 		number_as_hex_string_result.erase(number_as_hex_string_result.begin(), number_as_hex_string_result.begin() + index_of_first_significant_digit);
 		//number_as_hex_string_result = number_as_hex_string_result.substr(index_of_first_significant_digit);
 	else
 		number_as_hex_string_result = "0";
-	std::cout << '\n' << index_of_first_significant_digit << '\n';
 	return number_as_hex_string_result;
 }
 
 std::string Number_128bit::convert_128number_to_binary(const Number_128bit& Number_to_binary) {
-	for (int i = 0; i < size_of_number - 1; i++)
-		std::cout << Number_to_binary.number_as_array[i] << ' ';
-	std::cout << "\n\n";
-	unsigned int current_position = size_of_number - 1;
-	while (current_position >= 0) { //copying number
+	std::string number_in_binary_representation;
+	int current_position = size_of_number - 1;
+	while (current_position >= 0) { //copying number, in reverse order, to ease convertation
 		unsigned int number_in_current_cell = Number_to_binary.number_as_array[current_position];
-		std::cout << number_in_current_cell << ' ';
+		int current_bit = 31;
+		while (current_bit >= 0) {
+			unsigned int binary_current_digit = (number_in_current_cell >> current_bit) & 1; // formula from internet
+			number_in_binary_representation += std::to_string(binary_current_digit);
+			current_bit--;
+		}
 		current_position--;
 	}
+	unsigned int index_of_first_significant_digit = number_in_binary_representation.find_first_not_of('0'); // index, before which delete 0
+	if (index_of_first_significant_digit != -1) // if not empty string
+		number_in_binary_representation.erase(number_in_binary_representation.begin(), number_in_binary_representation.begin() + index_of_first_significant_digit);
+	else
+		number_in_binary_representation = "0";
+	return number_in_binary_representation;
 }
 
 unsigned int Number_128bit::not_null_cells_in_number_as_array() { //amount of significant digits in number
