@@ -92,6 +92,10 @@ unsigned int Number_128bit::not_null_cells_in_number_as_array() { //amount of si
 	return current_length;
 }
 
+//Number_128bit Number_128bit::square_128bit_Number() {
+//	return *this * *this;// multiplication will be soon
+//}
+
 //Number_128bit Number_128bit::power_function(const Number_128bit& power_number) { // using Gorner algorithm
 //	std::string degree_number_as_binary = convert_128number_to_binary(power_number);
 //	Number_128bit result("1");
@@ -100,8 +104,9 @@ unsigned int Number_128bit::not_null_cells_in_number_as_array() { //amount of si
 //	while (current_index_of_power >= 0) {
 //		if (degree_number_as_binary[current_index_of_power] == '1')
 //			result = result * base_number; // multiplication will be soon
-//		else
-//			continue;
+//		if (current_index_of_power > 0)
+//			base_number = base_square.square_128bit_Number();
+//		
 //	}
 //	return result;
 //}
