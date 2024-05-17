@@ -33,11 +33,12 @@ std::string Number_128bit::convert_128number_to_hex(unsigned int* number_as_arra
 		logic_order_number_as_array[current_position] = number_as_array[size_of_number - current_position - 1];
 		current_position--;
 	}
-	std::string number_as_hex_string_result = {};
+	std::string number_as_hex_string_result;
 	//current_position = 0;
 	unsigned int string_current_position = 0;
-	std::string current_8bitnumber_in_hex;
+	//std::string current_8bitnumber_in_hex;
 	while (string_current_position < size_of_number) {
+		std::string current_8bitnumber_in_hex;
 		unsigned index_to_control_8charbit = 0;
 		while (index_to_control_8charbit < 8) {
 			unsigned int position_of_char_digit = (1 << (4 * index_to_control_8charbit));
@@ -51,14 +52,20 @@ std::string Number_128bit::convert_128number_to_hex(unsigned int* number_as_arra
 		std::reverse(current_8bitnumber_in_hex.begin(), current_8bitnumber_in_hex.end());
 		number_as_hex_string_result += current_8bitnumber_in_hex;
 		string_current_position++;
-		current_8bitnumber_in_hex.clear();
+		//current_8bitnumber_in_hex.clear();
 	}
+	unsigned int index_of_first_significant_digit = number_as_hex_string_result.find_first_not_of('0'); // index, before which delete 0
+	std::cout << index_of_first_significant_digit;
+	if (index_of_first_significant_digit != -1) // if not empty string
+		number_as_hex_string_result.erase(number_as_hex_string_result.begin(), number_as_hex_string_result.begin() + index_of_first_significant_digit);
+		//number_as_hex_string_result = number_as_hex_string_result.substr(index_of_first_significant_digit);
+	else
+		number_as_hex_string_result = "0";
+	std::cout << '\n' << index_of_first_significant_digit << '\n';
 	return number_as_hex_string_result;
 }
 
-
-
-unsigned int Number_128bit::not_null_cells_in_number_as_array() { //amount of digits in number
+unsigned int Number_128bit::not_null_cells_in_number_as_array() { //amount of significant digits in number
 	unsigned int current_length = size_of_number;
 	while (number_as_array[current_length - 1] == 0 && current_length--)
 		if (current_length == 0)
