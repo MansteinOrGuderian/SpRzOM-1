@@ -11,10 +11,11 @@ public:
 
 	static unsigned int* convert_128number_from_hex(const std::string);
 	static std::string convert_128number_to_hex(unsigned int* number_as_array);
-	static std::string convert_128number_to_binary(const Number_128bit&);
+	static std::string convert_128number_to_binary(const Number_128bit&); // to use with power function
 	unsigned int* return_number_as_array() { return number_as_array; } // return pointer to first cell of number_as_array
 
 	unsigned int not_null_cells_in_number_as_array();
 
+	Number_128bit power_function(const Number_128bit&);
 };
 

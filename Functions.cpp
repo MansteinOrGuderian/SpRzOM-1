@@ -63,7 +63,7 @@ std::string Number_128bit::convert_128number_to_hex(unsigned int* number_as_arra
 	return number_as_hex_string_result;
 }
 
-std::string Number_128bit::convert_128number_to_binary(const Number_128bit& Number_to_binary) {
+std::string Number_128bit::convert_128number_to_binary(const Number_128bit& Number_to_binary) { // to use with power function
 	std::string number_in_binary_representation;
 	int current_position = size_of_number - 1;
 	while (current_position >= 0) { //copying number, in reverse order, to ease convertation
@@ -92,3 +92,16 @@ unsigned int Number_128bit::not_null_cells_in_number_as_array() { //amount of si
 	return current_length;
 }
 
+//Number_128bit Number_128bit::power_function(const Number_128bit& power_number) { // using Gorner algorithm
+//	std::string degree_number_as_binary = convert_128number_to_binary(power_number);
+//	Number_128bit result("1");
+//	Number_128bit base_number = *this;
+//	int current_index_of_power = degree_number_as_binary.length() - 1; // from highest to lowest
+//	while (current_index_of_power >= 0) {
+//		if (degree_number_as_binary[current_index_of_power] == '1')
+//			result = result * base_number; // multiplication will be soon
+//		else
+//			continue;
+//	}
+//	return result;
+//}
