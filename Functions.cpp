@@ -65,6 +65,18 @@ std::string Number_128bit::convert_128number_to_hex(unsigned int* number_as_arra
 	return number_as_hex_string_result;
 }
 
+std::string Number_128bit::convert_128number_to_binary(const Number_128bit& Number_to_binary) {
+	for (int i = 0; i < size_of_number - 1; i++)
+		std::cout << Number_to_binary.number_as_array[i] << ' ';
+	std::cout << "\n\n";
+	unsigned int current_position = size_of_number - 1;
+	while (current_position >= 0) { //copying number
+		unsigned int number_in_current_cell = Number_to_binary.number_as_array[current_position];
+		std::cout << number_in_current_cell << ' ';
+		current_position--;
+	}
+}
+
 unsigned int Number_128bit::not_null_cells_in_number_as_array() { //amount of significant digits in number
 	unsigned int current_length = size_of_number;
 	while (number_as_array[current_length - 1] == 0 && current_length--)
@@ -72,3 +84,4 @@ unsigned int Number_128bit::not_null_cells_in_number_as_array() { //amount of si
 			break;
 	return current_length;
 }
+
