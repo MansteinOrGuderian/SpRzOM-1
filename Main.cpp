@@ -18,7 +18,7 @@ int main() {
 	//std::string b = "1111 1111 1111 1111 1111 1111 1111 1111 1111";
 	std::cout << "\n\n";
 	int shift_left = 1;
-	ONE = (ONE << shift_left);
+	ONE = (ONE << 1);
 	std::cout << ONE;
 	std::cout << "\n\n";
 	std::cout << Number_128bit::convert_128number_to_hex(ONE.return_number_as_array()) << '\n';

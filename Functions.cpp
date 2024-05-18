@@ -92,12 +92,25 @@ unsigned int Number_128bit::not_null_cells_in_number_as_array() { //amount of si
 	return current_length;
 }
 
-Number_128bit Number_128bit::operator<< (int& number_of_left_shift_bit) {
+Number_128bit Number_128bit::operator>> (int number_of_right_shift_cells) {
+	Number_128bit result_of_right_shift(*this); // inputed number will be edit
+	unsigned int current_position = 0;
+	while (current_position < size_of_number) {
+		if ((current_position + number_of_right_shift_cells) < size_of_number) //shift number_cells in number_as_array, in new place, which defined by number_of_right_shift_cells
+			result_of_right_shift.number_as_array[current_position] = result_of_right_shift.number_as_array[current_position + number_of_right_shift_cells];
+		else // overwrite data in begin of array
+			result_of_right_shift.number_as_array[current_position] = 0;
+		current_position++;
+	}
+	return result_of_right_shift;
+}
+
+Number_128bit Number_128bit::operator<< (int number_of_left_shift_cells) {
 	Number_128bit result_of_left_shift(*this); // inputed number will be edit
 	int current_position = size_of_number - 1;
 	while (current_position >= 0) { // !!! significant numbers are in reverse order
-		if ((current_position - number_of_left_shift_bit) >= 0) // shift number_cells in number_as_array, until first significant met
-			result_of_left_shift.number_as_array[current_position] = result_of_left_shift.number_as_array[current_position - number_of_left_shift_bit];
+		if ((current_position - number_of_left_shift_cells) >= 0) // shift number_cells in number_as_array, until first significant met
+			result_of_left_shift.number_as_array[current_position] = result_of_left_shift.number_as_array[current_position - number_of_left_shift_cells];
 		else // if met, and still must shifting -> overwrite cell with nulls
 			result_of_left_shift.number_as_array[current_position] = 0;
 		current_position--;
