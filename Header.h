@@ -16,6 +16,7 @@ public:
 
 	unsigned int not_null_cells_in_number_as_array();
 
+	Number_2048bit operator* (unsigned int );
 	Number_2048bit operator>> (int n); // shift n cells of number_as_array right
 	Number_2048bit operator<< (int n); // shift n cells of number_as_array left
 	Number_2048bit operator* (const Number_2048bit&);

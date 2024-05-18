@@ -92,6 +92,20 @@ unsigned int Number_2048bit::not_null_cells_in_number_as_array() { //amount of s
 	return current_length;
 }
 
+Number_2048bit Number_2048bit::operator* (unsigned int number_on_which_multiply) {
+	unsigned int bit_carry = 0;
+	Number_2048bit result_of_multiplication("0");
+	unsigned int current_index_position = 0;
+	while (current_index_position < size_of_number) {
+		unsigned long long int temp = ((unsigned long long int)number_as_array[current_index_position]) * ((unsigned long long int)number_on_which_multiply) + ((unsigned long long int)bit_carry); // allocate more memory, because number could increase up to 2 times
+		result_of_multiplication.number_as_array[current_index_position] = ((unsigned int)(temp & 0xFFFFFFFF)); // or bitwiseAND with 4294967295 = (2^32 - 1)
+		bit_carry = ((unsigned int)(bit_carry >> 32));// implementation for 32-bit system
+		current_index_position++;
+	}
+	result_of_multiplication.number_as_array[size_of_number - 1] = bit_carry; //here saved number, last "digit" (cell) of result.number_as_array
+	return result_of_multiplication;
+}
+
 Number_2048bit Number_2048bit::operator>> (int number_of_right_shift_cells) {
 	Number_2048bit result_of_right_shift(*this); // inputed number will be edit
 	unsigned int current_position = 0;
@@ -118,36 +132,36 @@ Number_2048bit Number_2048bit::operator<< (int number_of_left_shift_cells) {
 	return result_of_left_shift;
 }
 
-Number_2048bit Number_2048bit::operator* (const Number_2048bit& Right_number) {
-	Number_2048bit result_of_multiplication("0");
-	unsigned int current_cell_index_right_number = 0;
-	while (current_cell_index_right_number < size_of_number) {
-		Number_2048bit temp = *this * Right_number.number_as_array[current_cell_index_right_number]; // multiplication on int will be soon
-		temp = temp << current_cell_index_right_number; // left shift == multiplication on degree of 2
-		result_of_multiplication = result_of_multiplication + temp; // adding operator will be overloaded soon
-		current_cell_index_right_number++;
-	}
-	return result_of_multiplication;
-}
+//Number_2048bit Number_2048bit::operator* (const Number_2048bit& Right_number) {
+//	Number_2048bit result_of_multiplication("0");
+//	unsigned int current_cell_index_right_number = 0;
+//	while (current_cell_index_right_number < size_of_number) {
+//		Number_2048bit temp = *this * Right_number.number_as_array[current_cell_index_right_number]; // multiplication on int will be soon
+//		temp = temp << current_cell_index_right_number; // left shift == multiplication on degree of 2
+//		result_of_multiplication = result_of_multiplication + temp; // adding operator will be overloaded soon
+//		current_cell_index_right_number++;
+//	}
+//	return result_of_multiplication;
+//}
 
-Number_2048bit Number_2048bit::square_128bit_Number() {
-	return *this * *this;
-}
+//Number_2048bit Number_2048bit::square_128bit_Number() {
+//	return *this * *this;
+//}
 
-Number_2048bit Number_2048bit::power_function(const Number_2048bit& power_number) { // using Gorner algorithm
-	std::string degree_number_as_binary = convert_128number_to_binary(power_number);
-	Number_2048bit result("1");
-	Number_2048bit base_number = *this;
-	int current_index_of_power = degree_number_as_binary.length() - 1; // from highest to lowest
-	while (current_index_of_power >= 0) {
-		if (degree_number_as_binary[current_index_of_power] == '1')
-			result = result * base_number; 
-		if (current_index_of_power > 0)
-			base_number = base_number.square_128bit_Number();
-		
-	}
-	return result;
-}
+//Number_2048bit Number_2048bit::power_function(const Number_2048bit& power_number) { // using Gorner algorithm
+//	std::string degree_number_as_binary = convert_128number_to_binary(power_number);
+//	Number_2048bit result("1");
+//	Number_2048bit base_number = *this;
+//	int current_index_of_power = degree_number_as_binary.length() - 1; // from highest to lowest
+//	while (current_index_of_power >= 0) {
+//		if (degree_number_as_binary[current_index_of_power] == '1')
+//			result = result * base_number; 
+//		if (current_index_of_power > 0)
+//			base_number = base_number.square_128bit_Number();
+//		
+//	}
+//	return result;
+//}
 
 std::ostream& operator<<(std::ostream& out, const Number_2048bit& Data) {
 	for (int i = 0; i < Data.size_of_number; i++)

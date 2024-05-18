@@ -16,25 +16,20 @@ int main() {
 	std::string a = Number_2048bit::convert_128number_to_binary(ONE);
 	std::cout << a;*/
 	//std::string b = "1111 1111 1111 1111 1111 1111 1111 1111 1111";
-	std::cout << "\n\n";
+
+
+
+	/*std::cout << "\n\n";
 	int shift_left = 1;
 	ONE = (ONE << 1);
 	std::cout << ONE;
 	std::cout << "\n\n";
 	std::cout << Number_2048bit::convert_128number_to_hex(ONE.return_number_as_array()) << '\n';
-	//std::cout << "\n\n";
-	
-	//std::string b = Number_2048bit::convert_128number_to_binary( (ONE << shift_left) ); // 
-	//std::cout << b;
-	//
-	//std::string binaryString = "11110000000000000000000000000000000000000000000000000000000000000000";
-	//
-	//std::cout << "\n\n";
-	//int c = 40; // 101000 ~ 40
-	//std::cout << (c >> 1); // 10100 ~ 20    // 1010000 ~ 80
-	//std::cout << "\n\n";
-	//std::cout << (c >> 2); // 1010 ~ 10
-	//std::cout << "\n\n";
+	std::cout << "\n\n";*/
+	std::cout << "\n\n";
+	unsigned long long int a = 4294967296; //1 0000 0000 0000 0000 0000 0000 0000 0000
+	std::cout << (a & 4294967295); // a & 1111 1111 1111 1111 1111 1111 1111 1111 = 0
+
 
 }
 
