@@ -84,7 +84,7 @@ std::string Number_128bit::convert_128number_to_binary(const Number_128bit& Numb
 	return number_in_binary_representation;
 }
 
-unsigned int Number_128bit::not_null_cells_in_number_as_array() { //amount of significant digits in number
+unsigned int Number_128bit::not_null_cells_in_number_as_array() { //amount of significant digits in number ??
 	unsigned int current_length = size_of_number;
 	while (number_as_array[current_length - 1] == 0 && current_length--)
 		if (current_length == 0)
@@ -92,12 +92,25 @@ unsigned int Number_128bit::not_null_cells_in_number_as_array() { //amount of si
 	return current_length;
 }
 
+Number_128bit Number_128bit::operator<< (int& number_of_left_shift_bit) {
+	Number_128bit result_of_left_shift(*this); // inputed number will be edit
+	int current_position = size_of_number - 1;
+	while (current_position >= 0) { // !!! significant numbers are in reverse order
+		if ((current_position - number_of_left_shift_bit) >= 0) // shift number_cells in number_as_array, until first significant met
+			result_of_left_shift.number_as_array[current_position] = result_of_left_shift.number_as_array[current_position - number_of_left_shift_bit];
+		else // if met, and still must shifting -> overwrite cell with nulls
+			result_of_left_shift.number_as_array[current_position] = 0;
+		current_position--;
+	}
+	return result_of_left_shift;
+}
+
 //Number_128bit Number_128bit::operator* (const Number_128bit& Right_number) {
 //	Number_128bit result_of_multiplication("0");
 //	unsigned int current_cell_index_right_number = 0;
 //	while (current_cell_index_right_number < size_of_number) {
 //		Number_128bit temp = *this * Right_number.number_as_array[current_cell_index_right_number]; // multiplication on int will be soon
-//		temp = temp << current_cell_index_right_number; // left shift will be soon
+//		temp = temp << current_cell_index_right_number; // left shift == multiplication on degree of 2
 //		result_of_multiplication = result_of_multiplication + temp; // adding operator will be overloaded soon
 //		current_cell_index_right_number++;
 //	}
@@ -122,3 +135,9 @@ unsigned int Number_128bit::not_null_cells_in_number_as_array() { //amount of si
 //	}
 //	return result;
 //}
+
+std::ostream& operator<<(std::ostream& out, const Number_128bit& Data) {
+	for (int i = 0; i < Data.size_of_number; i++)
+		out << Data.number_as_array[i] << ' ';
+	return out;
+}
