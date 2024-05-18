@@ -1,10 +1,10 @@
 #include "Header.h"
-Number_128bit::Number_128bit(const std::string& number_as_hex_string) {
+Number_2048bit::Number_2048bit(const std::string& number_as_hex_string) {
 	unsigned int* array_of_properly_numbers = convert_128number_from_hex(number_as_hex_string);
 	int i = 0; while (i < size_of_number) { number_as_array[i] = array_of_properly_numbers[i]; i++; }
 }
 
-unsigned int* Number_128bit::convert_128number_from_hex(const std::string number_as_hex_string) {
+unsigned int* Number_2048bit::convert_128number_from_hex(const std::string number_as_hex_string) {
 	unsigned int* array_of_properly_numbers = new unsigned int[size_of_number] {0};
 	std::string number_as_hex_string_reversed = number_as_hex_string;
 	reverse(number_as_hex_string_reversed.begin(), number_as_hex_string_reversed.end());
@@ -26,7 +26,7 @@ unsigned int* Number_128bit::convert_128number_from_hex(const std::string number
 	return array_of_properly_numbers;
 }
 
-std::string Number_128bit::convert_128number_to_hex(unsigned int* number_as_array) { 
+std::string Number_2048bit::convert_128number_to_hex(unsigned int* number_as_array) { 
 	unsigned int* logic_order_number_as_array = new unsigned int[size_of_number];
 	int current_position = size_of_number - 1;
 	while (current_position >= 0) {
@@ -63,7 +63,7 @@ std::string Number_128bit::convert_128number_to_hex(unsigned int* number_as_arra
 	return number_as_hex_string_result;
 }
 
-std::string Number_128bit::convert_128number_to_binary(const Number_128bit& Number_to_binary) { // to use with power function
+std::string Number_2048bit::convert_128number_to_binary(const Number_2048bit& Number_to_binary) { // to use with power function
 	std::string number_in_binary_representation;
 	int current_position = size_of_number - 1;
 	while (current_position >= 0) { //copying number, in reverse order, to ease convertation
@@ -84,7 +84,7 @@ std::string Number_128bit::convert_128number_to_binary(const Number_128bit& Numb
 	return number_in_binary_representation;
 }
 
-unsigned int Number_128bit::not_null_cells_in_number_as_array() { //amount of significant digits in number ??
+unsigned int Number_2048bit::not_null_cells_in_number_as_array() { //amount of significant digits in number ??
 	unsigned int current_length = size_of_number;
 	while (number_as_array[current_length - 1] == 0 && current_length--)
 		if (current_length == 0)
@@ -92,8 +92,8 @@ unsigned int Number_128bit::not_null_cells_in_number_as_array() { //amount of si
 	return current_length;
 }
 
-Number_128bit Number_128bit::operator>> (int number_of_right_shift_cells) {
-	Number_128bit result_of_right_shift(*this); // inputed number will be edit
+Number_2048bit Number_2048bit::operator>> (int number_of_right_shift_cells) {
+	Number_2048bit result_of_right_shift(*this); // inputed number will be edit
 	unsigned int current_position = 0;
 	while (current_position < size_of_number) {
 		if ((current_position + number_of_right_shift_cells) < size_of_number) //shift number_cells in number_as_array, in new place, which defined by number_of_right_shift_cells
@@ -105,8 +105,8 @@ Number_128bit Number_128bit::operator>> (int number_of_right_shift_cells) {
 	return result_of_right_shift;
 }
 
-Number_128bit Number_128bit::operator<< (int number_of_left_shift_cells) {
-	Number_128bit result_of_left_shift(*this); // inputed number will be edit
+Number_2048bit Number_2048bit::operator<< (int number_of_left_shift_cells) {
+	Number_2048bit result_of_left_shift(*this); // inputed number will be edit
 	int current_position = size_of_number - 1;
 	while (current_position >= 0) { // !!! significant numbers are in reverse order
 		if ((current_position - number_of_left_shift_cells) >= 0) // shift number_cells in number_as_array, until first significant met
@@ -118,38 +118,38 @@ Number_128bit Number_128bit::operator<< (int number_of_left_shift_cells) {
 	return result_of_left_shift;
 }
 
-//Number_128bit Number_128bit::operator* (const Number_128bit& Right_number) {
-//	Number_128bit result_of_multiplication("0");
-//	unsigned int current_cell_index_right_number = 0;
-//	while (current_cell_index_right_number < size_of_number) {
-//		Number_128bit temp = *this * Right_number.number_as_array[current_cell_index_right_number]; // multiplication on int will be soon
-//		temp = temp << current_cell_index_right_number; // left shift == multiplication on degree of 2
-//		result_of_multiplication = result_of_multiplication + temp; // adding operator will be overloaded soon
-//		current_cell_index_right_number++;
-//	}
-//	return result_of_multiplication;
-//}
+Number_2048bit Number_2048bit::operator* (const Number_2048bit& Right_number) {
+	Number_2048bit result_of_multiplication("0");
+	unsigned int current_cell_index_right_number = 0;
+	while (current_cell_index_right_number < size_of_number) {
+		Number_2048bit temp = *this * Right_number.number_as_array[current_cell_index_right_number]; // multiplication on int will be soon
+		temp = temp << current_cell_index_right_number; // left shift == multiplication on degree of 2
+		result_of_multiplication = result_of_multiplication + temp; // adding operator will be overloaded soon
+		current_cell_index_right_number++;
+	}
+	return result_of_multiplication;
+}
 
-//Number_128bit Number_128bit::square_128bit_Number() {
-//	return *this * *this;
-//}
+Number_2048bit Number_2048bit::square_128bit_Number() {
+	return *this * *this;
+}
 
-//Number_128bit Number_128bit::power_function(const Number_128bit& power_number) { // using Gorner algorithm
-//	std::string degree_number_as_binary = convert_128number_to_binary(power_number);
-//	Number_128bit result("1");
-//	Number_128bit base_number = *this;
-//	int current_index_of_power = degree_number_as_binary.length() - 1; // from highest to lowest
-//	while (current_index_of_power >= 0) {
-//		if (degree_number_as_binary[current_index_of_power] == '1')
-//			result = result * base_number; 
-//		if (current_index_of_power > 0)
-//			base_number = base_square.square_128bit_Number();
-//		
-//	}
-//	return result;
-//}
+Number_2048bit Number_2048bit::power_function(const Number_2048bit& power_number) { // using Gorner algorithm
+	std::string degree_number_as_binary = convert_128number_to_binary(power_number);
+	Number_2048bit result("1");
+	Number_2048bit base_number = *this;
+	int current_index_of_power = degree_number_as_binary.length() - 1; // from highest to lowest
+	while (current_index_of_power >= 0) {
+		if (degree_number_as_binary[current_index_of_power] == '1')
+			result = result * base_number; 
+		if (current_index_of_power > 0)
+			base_number = base_number.square_128bit_Number();
+		
+	}
+	return result;
+}
 
-std::ostream& operator<<(std::ostream& out, const Number_128bit& Data) {
+std::ostream& operator<<(std::ostream& out, const Number_2048bit& Data) {
 	for (int i = 0; i < Data.size_of_number; i++)
 		out << Data.number_as_array[i] << ' ';
 	return out;
