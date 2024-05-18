@@ -92,8 +92,20 @@ unsigned int Number_128bit::not_null_cells_in_number_as_array() { //amount of si
 	return current_length;
 }
 
+//Number_128bit Number_128bit::operator* (const Number_128bit& Right_number) {
+//	Number_128bit result_of_multiplication("0");
+//	unsigned int current_cell_index_right_number = 0;
+//	while (current_cell_index_right_number < size_of_number) {
+//		Number_128bit temp = *this * Right_number.number_as_array[current_cell_index_right_number]; // multiplication on int will be soon
+//		temp = temp << current_cell_index_right_number; // left shift will be soon
+//		result_of_multiplication = result_of_multiplication + temp; // adding operator will be overloaded soon
+//		current_cell_index_right_number++;
+//	}
+//	return result_of_multiplication;
+//}
+
 //Number_128bit Number_128bit::square_128bit_Number() {
-//	return *this * *this;// multiplication will be soon
+//	return *this * *this;
 //}
 
 //Number_128bit Number_128bit::power_function(const Number_128bit& power_number) { // using Gorner algorithm
@@ -103,7 +115,7 @@ unsigned int Number_128bit::not_null_cells_in_number_as_array() { //amount of si
 //	int current_index_of_power = degree_number_as_binary.length() - 1; // from highest to lowest
 //	while (current_index_of_power >= 0) {
 //		if (degree_number_as_binary[current_index_of_power] == '1')
-//			result = result * base_number; // multiplication will be soon
+//			result = result * base_number; 
 //		if (current_index_of_power > 0)
 //			base_number = base_square.square_128bit_Number();
 //		

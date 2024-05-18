@@ -16,6 +16,7 @@ public:
 
 	unsigned int not_null_cells_in_number_as_array();
 
+	Number_128bit operator* (const Number_128bit&);
 	Number_128bit square_128bit_Number();
 	Number_128bit power_function(const Number_128bit&);
 };
