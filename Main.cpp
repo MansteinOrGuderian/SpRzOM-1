@@ -2,7 +2,7 @@
 
 int main() {
 
-	std::string number_one("f"); // 15 ~ 1111
+	std::string number_one("10000000000000000000"); // 15 ~ 1111
 	////std::string number_one("1000000");
 
 	Number_2048bit ONE(number_one);
@@ -17,7 +17,8 @@ int main() {
 	std::cout << a;*/
 	//std::string b = "1111 1111 1111 1111 1111 1111 1111 1111 1111";
 
-
+	std::cout << '\n';
+	std::cout << ONE.first_significant_not_null_cell_in_number_as_array();
 
 	/*std::cout << "\n\n";
 	int shift_left = 1;

@@ -14,7 +14,7 @@ public:
 	static std::string convert_128number_to_binary(const Number_2048bit&); // to use with power function
 	unsigned int* return_number_as_array() { return number_as_array; } // return pointer to first cell of number_as_array
 
-	unsigned int not_null_cells_in_number_as_array();
+	unsigned int first_significant_not_null_cell_in_number_as_array();
 
 	Number_2048bit operator- (const Number_2048bit&);
 	Number_2048bit operator+ (const Number_2048bit&);

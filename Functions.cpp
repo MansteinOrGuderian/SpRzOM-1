@@ -84,7 +84,7 @@ std::string Number_2048bit::convert_128number_to_binary(const Number_2048bit& Nu
 	return number_in_binary_representation;
 }
 
-unsigned int Number_2048bit::not_null_cells_in_number_as_array() { //amount of significant digits in number ??
+unsigned int Number_2048bit::first_significant_not_null_cell_in_number_as_array() { //cell, where first significant digit stored
 	unsigned int current_length = size_of_number;
 	while (number_as_array[current_length - 1] == 0 && current_length--)
 		if (current_length == 0)
