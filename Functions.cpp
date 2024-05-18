@@ -92,13 +92,27 @@ unsigned int Number_2048bit::not_null_cells_in_number_as_array() { //amount of s
 	return current_length;
 }
 
+Number_2048bit Number_2048bit::operator+ (const Number_2048bit& Right_number) {
+	unsigned int bit_carry = 0;
+	Number_2048bit result_of_summing("0");
+	unsigned int current_index_position = 0;
+	while (current_index_position < size_of_number) {
+		unsigned long long int temp = ((unsigned long long int)number_as_array[current_index_position]) + ((unsigned long long int)result_of_summing.number_as_array[current_index_position]) + ((unsigned long long int)bit_carry); // allocate more memory, because number can increase up 1 digit
+		result_of_summing.number_as_array[current_index_position] = ((unsigned int)(temp & 0xFFFFFFFF)); // or bitwiseAND with 4294967295 = (2^32 - 1), like modulo
+		bit_carry = ((unsigned int)(bit_carry >> 32));// implementation for 32-bit system
+		current_index_position++;
+	}
+	//result_of_summing.number_as_array[size_of_number] = carry; //fixed length of number, so didn't saved
+	return result_of_summing;
+}
+
 Number_2048bit Number_2048bit::operator* (unsigned int number_on_which_multiply) {
 	unsigned int bit_carry = 0;
 	Number_2048bit result_of_multiplication("0");
 	unsigned int current_index_position = 0;
 	while (current_index_position < size_of_number) {
-		unsigned long long int temp = ((unsigned long long int)number_as_array[current_index_position]) * ((unsigned long long int)number_on_which_multiply) + ((unsigned long long int)bit_carry); // allocate more memory, because number could increase up to 2 times
-		result_of_multiplication.number_as_array[current_index_position] = ((unsigned int)(temp & 0xFFFFFFFF)); // or bitwiseAND with 4294967295 = (2^32 - 1)
+		unsigned long long int temp = ((unsigned long long int)number_as_array[current_index_position]) * ((unsigned long long int)number_on_which_multiply) + ((unsigned long long int)bit_carry); // allocate more memory, because number can increase up to 2 times
+		result_of_multiplication.number_as_array[current_index_position] = ((unsigned int)(temp & 0xFFFFFFFF)); // or bitwiseAND with 4294967295 = (2^32 - 1), like modulo (cut first's most significant bits)
 		bit_carry = ((unsigned int)(bit_carry >> 32));// implementation for 32-bit system
 		current_index_position++;
 	}

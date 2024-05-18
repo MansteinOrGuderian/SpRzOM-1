@@ -26,10 +26,9 @@ int main() {
 	std::cout << "\n\n";
 	std::cout << Number_2048bit::convert_128number_to_hex(ONE.return_number_as_array()) << '\n';
 	std::cout << "\n\n";*/
-	std::cout << "\n\n";
-	unsigned long long int a = 4294967296; //1 0000 0000 0000 0000 0000 0000 0000 0000
-	std::cout << (a & 4294967295); // a & 1111 1111 1111 1111 1111 1111 1111 1111 = 0
-
-
+	
+	//std::cout << "\n\n";
+	//unsigned long long int a = 4294967296; //1 0000 0000 0000 0000 0000 0000 0000 0000
+	//std::cout << (a & 4294967295); // a & 1111 1111 1111 1111 1111 1111 1111 1111 = 0
 }
 
