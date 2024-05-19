@@ -2,7 +2,7 @@
 
 int main() {
 
-	std::string number_one("fffffffff"); // 15 ~ 1111
+	std::string number_one("acbacbacacbacbacbacfefbacefab"); // 15 ~ 1111 fffffffff
 	////std::string number_one("1000000");
 
 	Number_2048bit ONE(number_one);
@@ -29,12 +29,8 @@ int main() {
 	//std::cout << "\n\n";
 
 	std::cout << "\n\n";
-
-	std::string number_two("fffffffff");
+	std::string number_two("acbacbacacbacbacbacfefbacefa9");
 	Number_2048bit TWO(number_two);
-	for (int i = 0; i < 128; i++)
-		std::cout << Number_2048bit::convert_128number_from_hex(number_two)[i] << ' ';
-	std::cout << "\n";
-	std::cout << (TWO < ONE);
+
 }
 

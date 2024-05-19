@@ -205,7 +205,7 @@ std::ostream& operator<<(std::ostream& out, const Number_2048bit& Data) {
 	return out;
 }
 
-bool Number_2048bit::operator> (const Number_2048bit& Right_number) {
+bool Number_2048bit::operator> (const Number_2048bit& Right_number) const {
 	int current_position = size_of_number - 1;
 	while (current_position >= 0) {
 		if (number_as_array[current_position] > Right_number.number_as_array[current_position])
@@ -215,7 +215,7 @@ bool Number_2048bit::operator> (const Number_2048bit& Right_number) {
 	return false; 
 }
 
-bool Number_2048bit::operator< (const Number_2048bit& Right_number) {
+bool Number_2048bit::operator< (const Number_2048bit& Right_number) const{
 	int current_position = size_of_number - 1;
 	while (current_position >= 0) {
 		if (number_as_array[current_position] < Right_number.number_as_array[current_position])
@@ -226,11 +226,11 @@ bool Number_2048bit::operator< (const Number_2048bit& Right_number) {
 }
 
 
-bool Number_2048bit::operator!= (const Number_2048bit& Right_number) {
+bool Number_2048bit::operator!= (const Number_2048bit& Right_number) const {
 	return !(*this == Right_number);
 }
 
-bool Number_2048bit::operator== (const Number_2048bit& Right_number) {
+bool Number_2048bit::operator== (const Number_2048bit& Right_number) const{
 	int current_position = size_of_number - 1;
 	while (current_position >= 0) {
 		if (number_as_array[current_position] != Right_number.number_as_array[current_position])
@@ -240,22 +240,58 @@ bool Number_2048bit::operator== (const Number_2048bit& Right_number) {
 	return true;
 }
 
-//Number_2048bit Number_2048bit::operator/ (const Number_2048bit& Divisor_number) {
-//	Number_2048bit result_of_division;
-//	if (Divisor_number > *this)
-//		return result_of_division; // don't work with fractional numbers
-//	if (Divisor_number == Number_2048bit("0"))
-//		return Number_2048bit("0");
-//	return result_of_division;
-//}
+bool Number_2048bit::operator>= (const Number_2048bit& Right_number) const { // *this >= Right_number
+	return ! (*this < Right_number);
+}
 
-Number_2048bit Number_2048bit::shift_higher_bits_in_number(long int number_of_left_shift_bits) {
+bool Number_2048bit::operator<= (const Number_2048bit& Right_number) const { // *this <= Right_number
+	return !(*this > Right_number);
+}
+
+unsigned int Number_2048bit::length_of_number_in_bits() const{
+	unsigned int length_in_bits = 32 * size_of_number; //max possible size
+	int current_position = size_of_number - 1;
+	while (current_position >= 0) {
+		if (number_as_array[current_position] != 0) {
+			int current_bit = 31;
+			while (current_bit >= 0 && ((number_as_array[current_position] & (1u << current_bit)) == 0)) // 1u == unsigned int var = 1;
+				current_bit--; //iterate throught number in each cell of number_as_array
+			length_in_bits = current_position * 32 + current_bit + 1;
+			break;
+		}
+		current_position--;
+	}
+	return length_in_bits;
+}
+
+Number_2048bit Number_2048bit::operator/ (const Number_2048bit& Divisor_number) {
+	Number_2048bit result_of_division; // quotient
+	if (*this < Divisor_number)
+		return result_of_division; // don't work with fractional numbers, return 0
+	if (Divisor_number == Number_2048bit("0"))
+		throw std::exception("Error happend!\nCannot divide by null.");
+	Number_2048bit remainder = *this;
+	long int length_of_divisor_in_bits = Divisor_number.length_of_number_in_bits();
+	while (remainder >= Divisor_number) {
+		long int length_of_remainder_in_bits = remainder.length_of_number_in_bits();
+		Number_2048bit temp = Divisor_number.shift_higher_bits_in_number(length_of_remainder_in_bits - length_of_divisor_in_bits);
+		if (remainder < temp) {
+			length_of_remainder_in_bits -= 1; //one bit step back
+			temp = Divisor_number.shift_higher_bits_in_number(length_of_remainder_in_bits - length_of_divisor_in_bits);
+		}
+		remainder = (remainder - temp);
+		Number_2048bit bit_setter("1"); // set 1 at (length_of_remainder_in_bits - length_of_divisor_in_bits) position
+		result_of_division = result_of_division + bit_setter.shift_higher_bits_in_number(length_of_remainder_in_bits - length_of_divisor_in_bits);
+	}
+	return result_of_division;
+}
+
+Number_2048bit Number_2048bit::shift_higher_bits_in_number(long int number_of_left_shift_bits) const{
 	Number_2048bit result_of_shifting; // number is 0 == array filled with nulls
 	if (number_of_left_shift_bits >= 32 * size_of_number)
 		return result_of_shifting;
-	else if (number_of_left_shift_bits <= 0) { // undefined behavior
-		return *this;  // return current value(for example) OR   // throw std::exception("Error happend!\nCannot shift on negative value."); 
-	}
+	else if (number_of_left_shift_bits <= 0)  // undefined behavior
+		return *this;  // return current value(for my implementation) OR   // throw std::exception("Error happend!\nCannot shift on negative value."); 
 	long int amount_of_full_integer_bit_cells = number_of_left_shift_bits / 32; //because we have 32bit system
 	long int amount_of_remainder_bit = number_of_left_shift_bits % 32;
 	unsigned int bit_carry = 0;
@@ -288,7 +324,6 @@ Number_2048bit Number_2048bit::shift_higher_bits_in_number(long int number_of_le
 			result_of_shifting.number_as_array[current_position] = 0; // fill "lower" cells with nulls
 			current_position++;
 		}
-
 	}
 	return result_of_shifting;
 }

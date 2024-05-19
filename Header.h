@@ -24,11 +24,14 @@ public:
 	Number_2048bit square_128bit_Number();
 	Number_2048bit power_function(const Number_2048bit&);
 	Number_2048bit operator/ (const Number_2048bit&);
-	Number_2048bit shift_higher_bits_in_number(long int n); // shift n bit in whole number to higher bits (multiply on 2^pow)
-	bool operator== (const Number_2048bit&);
-	bool operator!= (const Number_2048bit&);
-	bool operator> (const Number_2048bit&);
-	bool operator< (const Number_2048bit&);
+	Number_2048bit shift_higher_bits_in_number(long int n) const; // shift n bit in whole number to higher bits (multiply on 2^pow)
+	bool operator== (const Number_2048bit&) const;
+	bool operator!= (const Number_2048bit&) const;
+	bool operator> (const Number_2048bit&) const;
+	bool operator< (const Number_2048bit&) const;
+	unsigned int length_of_number_in_bits() const; //amount of digits in binary representation
+	bool operator>= (const Number_2048bit&) const;
+	bool operator<= (const Number_2048bit&) const;
 
 	friend std::ostream& operator<<(std::ostream&, const Number_2048bit&); // output number as it stored
 };
