@@ -36,7 +36,7 @@ int main() {
 	//Number_2048bit b("0");
 	//std::cout << b << '\n';
 	
-	//std::cin >> d; // 4294967295 15  ~ ffff fffff 
+	//4294967295 15 0 ... 0 ~ ffff fffff 
 	// iter 1:
 	//result_of_shifting.number_as_array[current_position] = (number_as_array[current_position] << amount_of_remainder_bit) + bit_carry; // edit(shift left) number in each cell
 	// 0 =  (4294967295 << 1) + 0   //    4294967294 ~ ffffffffe 
@@ -45,8 +45,8 @@ int main() {
 	// iter 2:
 	// 0 = (15 << 1) + 1 -> 30 + 1 = 31 ~ 1f
 	// 1 = (15 >> 31) -> bit_carry = 0
-	// 0 = (0 << 1) + 0 = 0
-	//std::cout << ONE.shift_higher_bits_in_number(33);
-	//
+	// iter 3: ... to size_of number 
+	// 0 = (0 << 1) + 0 = 0 (like in prev iter)
+	// result: 1fffffffffe == 2 * fffffffff
 }
 

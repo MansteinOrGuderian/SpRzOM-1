@@ -237,7 +237,7 @@ Number_2048bit Number_2048bit::shift_higher_bits_in_number(long int number_of_le
 		int current_position = 0;
 		while (current_position < size_of_number) {
 			result_of_shifting.number_as_array[current_position] = (number_as_array[current_position] << amount_of_remainder_bit) + bit_carry; // edit(shift left) number in each cell
-			bit_carry = number_as_array[current_position] >> (32 - amount_of_remainder_bit);
+			bit_carry = number_as_array[current_position] >> (32 - amount_of_remainder_bit); // caluculate number, that should be added to next cell
 			current_position++;
 		}
 		current_position = size_of_number - 1;
