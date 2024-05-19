@@ -327,3 +327,22 @@ Number_2048bit Number_2048bit::shift_higher_bits_in_number(long int number_of_le
 	}
 	return result_of_shifting;
 }
+
+Number_2048bit Number_2048bit::operator% (const Number_2048bit& Modulo) {
+	Number_2048bit result_modulo_number = *this;
+	if (result_modulo_number < Modulo)
+		return result_modulo_number;
+	if (Modulo == Number_2048bit("0"))
+		throw std::exception("Error happend!\nCannot take by modulo null.");
+	long int length_of_modulo_in_bits = Modulo.length_of_number_in_bits();
+	while (result_modulo_number >= Modulo) {
+		long int length_of_result_by_modulo_in_bits = result_modulo_number.length_of_number_in_bits();
+		Number_2048bit temp = Modulo.shift_higher_bits_in_number(length_of_result_by_modulo_in_bits - length_of_modulo_in_bits);
+		if (result_modulo_number < temp) {
+			length_of_result_by_modulo_in_bits -= 1; //one bit step back
+			temp = Modulo.shift_higher_bits_in_number(length_of_result_by_modulo_in_bits - length_of_modulo_in_bits);
+		}
+		result_modulo_number = (result_modulo_number - temp);
+	}
+	return result_modulo_number;
+}

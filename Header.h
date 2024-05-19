@@ -32,6 +32,7 @@ public:
 	unsigned int length_of_number_in_bits() const; //amount of digits in binary representation
 	bool operator>= (const Number_2048bit&) const;
 	bool operator<= (const Number_2048bit&) const;
+	Number_2048bit operator% (const Number_2048bit&);
 
 	friend std::ostream& operator<<(std::ostream&, const Number_2048bit&); // output number as it stored
 };
