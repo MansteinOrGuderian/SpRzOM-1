@@ -221,5 +221,4 @@ Number_2048bit Number_2048bit::shift_left_bits_in_number(long int number_of_left
 	long int amount_of_full_integer_bit_cells = number_of_left_shift_bits / 32; //because we have 32bit system
 	long int amount_of_remainder_bit_cells = number_of_left_shift_bits % 32;
 	unsigned int bit_carry = 0;
-
 }
