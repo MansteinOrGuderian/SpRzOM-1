@@ -211,14 +211,46 @@ Number_2048bit Number_2048bit::operator/ (const Number_2048bit&) {
 	return result_of_division;
 }
 
-Number_2048bit Number_2048bit::shift_left_bits_in_number(long int number_of_left_shift_bits) {
+Number_2048bit Number_2048bit::shift_higher_bits_in_number(long int number_of_left_shift_bits) {
 	Number_2048bit result_of_shifting; // number is 0 == array filled with nulls
 	if (number_of_left_shift_bits >= 32 * size_of_number)
 		return result_of_shifting;
 	else if (number_of_left_shift_bits <= 0) { // undefined behavior
-		return *this;  // return current value(for example) OR  // throw std::exception("Error happend!\nCannot shift on negative value."); 
+		return *this;  // return current value(for example) OR   // throw std::exception("Error happend!\nCannot shift on negative value."); 
 	}
 	long int amount_of_full_integer_bit_cells = number_of_left_shift_bits / 32; //because we have 32bit system
-	long int amount_of_remainder_bit_cells = number_of_left_shift_bits % 32;
+	long int amount_of_remainder_bit = number_of_left_shift_bits % 32;
 	unsigned int bit_carry = 0;
+	if (amount_of_remainder_bit == 0) {
+		int current_position = size_of_number - 1;
+		while (current_position >= amount_of_full_integer_bit_cells) {
+			result_of_shifting.number_as_array[current_position] = number_as_array[current_position - amount_of_full_integer_bit_cells]; //shifting values left
+			current_position--; 
+		}
+		current_position = 0;
+		while (current_position < amount_of_full_integer_bit_cells) {
+			result_of_shifting.number_as_array[current_position] = 0; // fill "lower" cells with nulls
+			current_position++;
+		}
+	}
+	else {
+		int current_position = 0;
+		while (current_position < size_of_number) {
+			result_of_shifting.number_as_array[current_position] = (number_as_array[current_position] << amount_of_remainder_bit) + bit_carry; // edit(shift left) number in each cell
+			bit_carry = number_as_array[current_position] >> (32 - amount_of_remainder_bit);
+			current_position++;
+		}
+		current_position = size_of_number - 1;
+		while (current_position >= amount_of_full_integer_bit_cells) {
+			result_of_shifting.number_as_array[current_position] = result_of_shifting.number_as_array[current_position - amount_of_full_integer_bit_cells]; //shifting values left
+			current_position--;
+		}
+		current_position = 0;
+		while (current_position < amount_of_full_integer_bit_cells) {
+			result_of_shifting.number_as_array[current_position] = 0; // fill "lower" cells with nulls
+			current_position++;
+		}
+
+	}
+	return result_of_shifting;
 }
