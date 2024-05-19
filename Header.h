@@ -15,7 +15,6 @@ public:
 	unsigned int* return_number_as_array() { return number_as_array; } // return pointer to first cell of number_as_array
 
 	unsigned int first_significant_not_null_cell_in_number_as_array();
-
 	Number_2048bit operator- (const Number_2048bit&);
 	Number_2048bit operator+ (const Number_2048bit&);
 	Number_2048bit operator* (unsigned int );
@@ -24,7 +23,8 @@ public:
 	Number_2048bit operator* (const Number_2048bit&);
 	Number_2048bit square_128bit_Number();
 	Number_2048bit power_function(const Number_2048bit&);
+	Number_2048bit operator/ (const Number_2048bit&);
+	Number_2048bit shift_left_bits_in_number(long int n); // shift n bit in whole number left
 
 	friend std::ostream& operator<<(std::ostream&, const Number_2048bit&); // output number as it stored
 };
-

@@ -54,7 +54,7 @@ std::string Number_2048bit::convert_128number_to_hex(unsigned int* number_as_arr
 		string_current_position++;
 		//current_8bitnumber_in_hex.clear();
 	}
-	unsigned int index_of_first_significant_digit = number_as_hex_string_result.find_first_not_of('0'); // index, before which delete 0
+	unsigned int index_of_first_significant_digit = number_as_hex_string_result.find_first_not_of('0'); // index, before which delete all 0
 	if (index_of_first_significant_digit != -1) // if not empty string
 		number_as_hex_string_result.erase(number_as_hex_string_result.begin(), number_as_hex_string_result.begin() + index_of_first_significant_digit);
 		//number_as_hex_string_result = number_as_hex_string_result.substr(index_of_first_significant_digit);
@@ -203,4 +203,23 @@ std::ostream& operator<<(std::ostream& out, const Number_2048bit& Data) {
 	for (int i = 0; i < Data.size_of_number; i++)
 		out << Data.number_as_array[i] << ' ';
 	return out;
+}
+
+Number_2048bit Number_2048bit::operator/ (const Number_2048bit&) {
+	Number_2048bit result_of_division;
+
+	return result_of_division;
+}
+
+Number_2048bit Number_2048bit::shift_left_bits_in_number(long int number_of_left_shift_bits) {
+	Number_2048bit result_of_shifting; // number is 0 == array filled with nulls
+	if (number_of_left_shift_bits >= 32 * size_of_number)
+		return result_of_shifting;
+	else if (number_of_left_shift_bits <= 0) { // undefined behavior
+		return *this;  // return current value(for example) OR  // throw std::exception("Error happend!\nCannot shift on negative value."); 
+	}
+	long int amount_of_full_integer_bit_cells = number_of_left_shift_bits / 32; //because we have 32bit system
+	long int amount_of_remainder_bit_cells = number_of_left_shift_bits % 32;
+	unsigned int bit_carry = 0;
+
 }
