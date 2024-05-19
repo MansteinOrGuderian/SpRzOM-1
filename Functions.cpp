@@ -205,11 +205,49 @@ std::ostream& operator<<(std::ostream& out, const Number_2048bit& Data) {
 	return out;
 }
 
-Number_2048bit Number_2048bit::operator/ (const Number_2048bit&) {
-	Number_2048bit result_of_division;
-
-	return result_of_division;
+bool Number_2048bit::operator> (const Number_2048bit& Right_number) {
+	int current_position = size_of_number - 1;
+	while (current_position >= 0) {
+		if (number_as_array[current_position] > Right_number.number_as_array[current_position])
+			return true;
+		current_position--;
+	}
+	return false; 
 }
+
+bool Number_2048bit::operator< (const Number_2048bit& Right_number) {
+	int current_position = size_of_number - 1;
+	while (current_position >= 0) {
+		if (number_as_array[current_position] < Right_number.number_as_array[current_position])
+			return true;
+		current_position--;
+	}
+	return false;
+}
+
+
+bool Number_2048bit::operator!= (const Number_2048bit& Right_number) {
+	return !(*this == Right_number);
+}
+
+bool Number_2048bit::operator== (const Number_2048bit& Right_number) {
+	int current_position = size_of_number - 1;
+	while (current_position >= 0) {
+		if (number_as_array[current_position] != Right_number.number_as_array[current_position])
+			return false;
+		current_position--;
+	}
+	return true;
+}
+
+//Number_2048bit Number_2048bit::operator/ (const Number_2048bit& Divisor_number) {
+//	Number_2048bit result_of_division;
+//	if (Divisor_number > *this)
+//		return result_of_division; // don't work with fractional numbers
+//	if (Divisor_number == Number_2048bit("0"))
+//		return Number_2048bit("0");
+//	return result_of_division;
+//}
 
 Number_2048bit Number_2048bit::shift_higher_bits_in_number(long int number_of_left_shift_bits) {
 	Number_2048bit result_of_shifting; // number is 0 == array filled with nulls
