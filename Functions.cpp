@@ -1,11 +1,29 @@
 #include "Header.h"
+
+double MeasureTime(std::function<void()> operation, unsigned int amount_of_measurements) {
+	double* time_for_all_tryes = new double[amount_of_measurements + 1];
+	int current_measurement = 0;
+	while (current_measurement < amount_of_measurements) {
+		auto start_time = std::chrono::high_resolution_clock::now();
+		operation();  // Executing operation
+		auto end_time = std::chrono::high_resolution_clock::now();
+		std::chrono::duration<double> elapsed_time = end_time - start_time;
+		time_for_all_tryes[current_measurement] = elapsed_time.count();
+		time_for_all_tryes[amount_of_measurements] += time_for_all_tryes[current_measurement];
+		current_measurement++;
+	}
+	double average_time = (time_for_all_tryes[amount_of_measurements] / amount_of_measurements);
+	delete[] time_for_all_tryes;
+	return average_time;
+}
+
 Number_2048bit::Number_2048bit(const std::string& number_as_hex_string) {
 	unsigned int* array_of_properly_numbers = convert_128number_from_hex(number_as_hex_string);
 	int i = 0; while (i < size_of_number) { number_as_array[i] = array_of_properly_numbers[i]; i++; }
 }
 
 unsigned int* Number_2048bit::convert_128number_from_hex(const std::string number_as_hex_string) {
-	unsigned int* array_of_properly_numbers = new unsigned int[size_of_number] {0};
+	unsigned int* array_of_properly_numbers = new unsigned int[size_of_number]();
 	std::string number_as_hex_string_reversed = number_as_hex_string;
 	reverse(number_as_hex_string_reversed.begin(), number_as_hex_string_reversed.end());
 	int index_of_cell = -1; // index out of range
@@ -43,9 +61,9 @@ std::string Number_2048bit::convert_128number_to_hex(unsigned int* number_as_arr
 		while (index_to_control_8charbit < 8) {
 			unsigned int position_of_char_digit = (1 << (4 * index_to_control_8charbit));
 			unsigned int number_of_char_symbol = (logic_order_number_as_array[string_current_position] / position_of_char_digit) % 16;
-			if (number_of_char_symbol >= 0 && number_of_char_symbol <= 10)
+			if (number_of_char_symbol >= 0 && number_of_char_symbol < 10)
 				current_8bitnumber_in_hex += (char)(number_of_char_symbol + '0');
-			else
+			else if (number_of_char_symbol >= 10 && number_of_char_symbol < 16)
 				current_8bitnumber_in_hex += (char)(number_of_char_symbol + 'a' - 10);
 			index_to_control_8charbit++;
 		}
@@ -97,7 +115,7 @@ Number_2048bit Number_2048bit::operator- (const Number_2048bit& Right_number) {
 	Number_2048bit result_of_subtraction;
 	unsigned int current_index_position = 0;
 	while (current_index_position < size_of_number) {
-		long long int temp = ((unsigned long long int)number_as_array[current_index_position]) - ((unsigned long long int)result_of_subtraction.number_as_array[current_index_position]) - ((unsigned long long int)bit_borrow);
+		long long int temp = ((unsigned long long int)number_as_array[current_index_position]) - ((unsigned long long int)Right_number.number_as_array[current_index_position]) - ((unsigned long long int)bit_borrow);
 		if (temp >= 0) {
 			result_of_subtraction.number_as_array[current_index_position] = ((unsigned int)temp);
 			bit_borrow = 0;
@@ -119,23 +137,23 @@ Number_2048bit Number_2048bit::operator+ (const Number_2048bit& Right_number) {
 	Number_2048bit result_of_summing;
 	unsigned int current_index_position = 0;
 	while (current_index_position < size_of_number) {
-		unsigned long long int temp = ((unsigned long long int)number_as_array[current_index_position]) + ((unsigned long long int)result_of_summing.number_as_array[current_index_position]) + ((unsigned long long int)bit_carry); // allocate more memory, because number can increase up 1 digit
+		unsigned long long int temp = ((unsigned long long int)number_as_array[current_index_position]) + ((unsigned long long int)Right_number.number_as_array[current_index_position]) + ((unsigned long long int)bit_carry); // allocate more memory, because number can increase up 1 digit
 		result_of_summing.number_as_array[current_index_position] = ((unsigned int)(temp & 0xFFFFFFFF)); // or bitwiseAND with 4294967295 = (2^32 - 1), like modulo
-		bit_carry = ((unsigned int)(bit_carry >> 32));// implementation for 32-bit system
+		bit_carry = ((unsigned int)(temp >> 32));// implementation for 32-bit system
 		current_index_position++;
 	}
 	//result_of_summing.number_as_array[size_of_number] = carry; //fixed length of number, so didn't saved
 	return result_of_summing;
 }
 
-Number_2048bit Number_2048bit::operator* (unsigned int number_on_which_multiply) {
+Number_2048bit Number_2048bit::operator* (const unsigned int number_on_which_multiply) {
 	unsigned int bit_carry = 0;
 	Number_2048bit result_of_multiplication;
 	unsigned int current_index_position = 0;
 	while (current_index_position < size_of_number) {
 		unsigned long long int temp = ((unsigned long long int)number_as_array[current_index_position]) * ((unsigned long long int)number_on_which_multiply) + ((unsigned long long int)bit_carry); // allocate more memory, because number can increase up to 2 times
 		result_of_multiplication.number_as_array[current_index_position] = ((unsigned int)(temp & 0xFFFFFFFF)); // or bitwiseAND with 4294967295 = (2^32 - 1), like modulo (cut first's most significant bits)
-		bit_carry = ((unsigned int)(bit_carry >> 32));// implementation for 32-bit system
+		bit_carry = ((unsigned int)(temp >> 32)); // implementation for 32-bit system
 		current_index_position++;
 	}
 	result_of_multiplication.number_as_array[size_of_number - 1] = bit_carry; //here saved number, last "digit" (cell) of result.number_as_array
@@ -172,8 +190,8 @@ Number_2048bit Number_2048bit::operator* (const Number_2048bit& Right_number) {
 	Number_2048bit result_of_multiplication("0");
 	unsigned int current_cell_index_right_number = 0;
 	while (current_cell_index_right_number < size_of_number) {
-		Number_2048bit temp = *this * Right_number.number_as_array[current_cell_index_right_number]; // multiplication on int will be soon
-		temp = temp << current_cell_index_right_number; // left shift == multiplication on degree of 2
+		Number_2048bit temp = *this * Right_number.number_as_array[current_cell_index_right_number]; 
+		temp = (temp << current_cell_index_right_number); // left shift == multiplication on degree of 2
 		result_of_multiplication = result_of_multiplication + temp; // adding operator will be overloaded soon
 		current_cell_index_right_number++;
 	}
@@ -194,7 +212,7 @@ Number_2048bit Number_2048bit::power_function(const Number_2048bit& power_number
 			result = result * base_number; 
 		if (current_index_of_power > 0)
 			base_number = base_number.square_128bit_Number();
-		
+		current_index_of_power--;
 	}
 	return result;
 }
@@ -205,11 +223,11 @@ std::ostream& operator<<(std::ostream& out, const Number_2048bit& Data) {
 	return out;
 }
 
-bool Number_2048bit::operator> (const Number_2048bit& Right_number) const {
+bool Number_2048bit::operator> (const Number_2048bit& Right_number) const { // Left > Right
 	int current_position = size_of_number - 1;
 	while (current_position >= 0) {
-		if (number_as_array[current_position] > Right_number.number_as_array[current_position])
-			return true;
+		if (number_as_array[current_position] != Right_number.number_as_array[current_position])
+			return (number_as_array[current_position] > Right_number.number_as_array[current_position]);
 		current_position--;
 	}
 	return false; 
@@ -218,13 +236,12 @@ bool Number_2048bit::operator> (const Number_2048bit& Right_number) const {
 bool Number_2048bit::operator< (const Number_2048bit& Right_number) const{
 	int current_position = size_of_number - 1;
 	while (current_position >= 0) {
-		if (number_as_array[current_position] < Right_number.number_as_array[current_position])
-			return true;
+		if (number_as_array[current_position] != Right_number.number_as_array[current_position])
+			return (number_as_array[current_position] < Right_number.number_as_array[current_position]); 
 		current_position--;
 	}
 	return false;
 }
-
 
 bool Number_2048bit::operator!= (const Number_2048bit& Right_number) const {
 	return !(*this == Right_number);
@@ -290,7 +307,7 @@ Number_2048bit Number_2048bit::shift_higher_bits_in_number(long int number_of_le
 	Number_2048bit result_of_shifting; // number is 0 == array filled with nulls
 	if (number_of_left_shift_bits >= 32 * size_of_number)
 		return result_of_shifting;
-	else if (number_of_left_shift_bits <= 0)  // undefined behavior
+	if (number_of_left_shift_bits <= 0)  // undefined behavior
 		return *this;  // return current value(for my implementation) OR   // throw std::exception("Error happend!\nCannot shift on negative value."); 
 	long int amount_of_full_integer_bit_cells = number_of_left_shift_bits / 32; //because we have 32bit system
 	long int amount_of_remainder_bit = number_of_left_shift_bits % 32;
@@ -346,3 +363,6 @@ Number_2048bit Number_2048bit::operator% (const Number_2048bit& Modulo) {
 	}
 	return result_modulo_number;
 }
+
+
+

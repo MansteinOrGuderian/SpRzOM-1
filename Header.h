@@ -1,5 +1,9 @@
 #include <iostream>
 #include <string>
+#include <chrono> // for tracking time 
+#include <functional> // for tracking time
+#include <vector> // for tracking time
+double MeasureTime(std::function<void()> operation, unsigned int amount_of_measurements);
 
 struct Number_2048bit{
 private:
@@ -16,8 +20,8 @@ public:
 
 	unsigned int first_significant_not_null_cell_in_number_as_array();
 	Number_2048bit operator- (const Number_2048bit&);
-	Number_2048bit operator+ (const Number_2048bit&);
-	Number_2048bit operator* (unsigned int );
+	Number_2048bit operator+ (const Number_2048bit&) ;
+	Number_2048bit operator* (unsigned int ) ;
 	Number_2048bit operator>> (int n); // shift n cells of number_as_array right
 	Number_2048bit operator<< (int n); // shift n cells of number_as_array left
 	Number_2048bit operator* (const Number_2048bit&);
