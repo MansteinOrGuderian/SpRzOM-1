@@ -303,7 +303,7 @@ Number_2048bit Number_2048bit::operator/ (const Number_2048bit& Divisor_number) 
 	return result_of_division;
 }
 
-Number_2048bit Number_2048bit::shift_higher_bits_in_number(long int number_of_left_shift_bits) const{
+Number_2048bit Number_2048bit::shift_higher_bits_in_number(long int number_of_left_shift_bits) const {
 	Number_2048bit result_of_shifting; // number is 0 == array filled with nulls
 	if (number_of_left_shift_bits >= 32 * size_of_number)
 		return result_of_shifting;
@@ -364,5 +364,27 @@ Number_2048bit Number_2048bit::operator% (const Number_2048bit& Modulo) {
 	return result_modulo_number;
 }
 
+bool Number_2048bit::if_number_even() {
+	return (this->number_as_array[0] % 2 == 0) ? 1 : 0; // last "digit" is in index[0], because number stored in "reverse" order
+}
 
+Number_2048bit Number_2048bit::shift_lower_bits_in_number(long int number_of_right_shift_bits) const {
+	unsigned int bit_carry = 0;
+	Number_2048bit result_of_shifting;
+	int current_position = size_of_number - 1;
+	while (current_position >= 0) {
+		result_of_shifting.number_as_array[current_position] = (number_as_array[current_position] >> 1) + (bit_carry << 31); // divide number by 2 and add
+		bit_carry = (number_as_array[current_position] & 1); // control the last 
+		current_position--;
+	}
+	return result_of_shifting;
+}
+
+Number_2048bit Number_2048bit::greatest_common_divisor(const Number_2048bit& A_number, const Number_2048bit& B_number) { // gcd(a, b)
+	return *this;
+}
+
+Number_2048bit Number_2048bit::least_common_multiple(const Number_2048bit& A_number, const Number_2048bit& B_number) { // lcm(a, b)
+	return (*this * B_number) / greatest_common_divisor(*this, B_number); // using properties of lcm:	lcm(a,b) = (a * b) / gcd(a, b) 
+}
 

@@ -29,49 +29,18 @@ int main() {
 	std::cout << Number_2048bit::convert_128number_to_hex(a_sum_n_times.return_number_as_array()) << "\n\n";
 	std::cout << Number_2048bit::convert_128number_to_hex(a_mult.return_number_as_array()) << "\n\n";*/
 
+	std::string number = "fffffffffffff"; // 4294967295 1048575
+	Number_2048bit Number(number);
+	std::cout << Number << "\n\n";
+	std::cout << Number.shift_lower_bits_in_number(1) << "\n\n";
+	// step 1 ... 125: result = (0 >> 1) + bit_carry 
+	// bit_carry = 0 & 1 -> bit_carry = 0
+	// step 126: result[current_position] = (1048575 >> 1 ) + 0 // 1111 1111 1111 1111 1111 -> 1111 1111 1111 1111 111
+	// bit_carry = 1111 1111 1111 1111 1111 & 1 // 1 = 0000 0000 0000 0001 -> bit_carry = 1
+	// step 127: result[current_position] = (4294967295 >> 1) + (1 << 31) // 7fffffff + 80000000 -> result[current_position] = 4294967295 // as was
+	// bit_carry = 1111 1111 1111 1111 1111 1111 1111 1111 & 1 -> bit_carry = 1
+	std::cout << Number.if_number_even();
 	
-
-	int amount_of_measurements = 10;
-	double* time_for_all_tryes = new double[amount_of_measurements + 1]{};
-	int current_measurement = 0;
-	while (current_measurement < amount_of_measurements) {
-		auto start_time = std::chrono::high_resolution_clock::now();
-		Number_2048bit  production_of_2048numbers = ONE * TWO;// Executing operation
-		auto end_time = std::chrono::high_resolution_clock::now();
-		std::chrono::duration<double> elapsed_time = end_time - start_time;
-		time_for_all_tryes[current_measurement] = elapsed_time.count();
-		std::cout << time_for_all_tryes[current_measurement] << '\n';
-		time_for_all_tryes[amount_of_measurements] += time_for_all_tryes[current_measurement];
-		std::cout << "Amount:\t" << time_for_all_tryes[amount_of_measurements] << '\n';
-		current_measurement++;
-	}
-	double average_time = (time_for_all_tryes[amount_of_measurements] / amount_of_measurements);
-	std::cout << average_time;
-
-	Number_2048bit sum_of_2048numbers = ONE + TWO;
-	Number_2048bit difference_of_2048numbers;
-	(ONE < TWO) ? difference_of_2048numbers = (TWO - ONE) : difference_of_2048numbers = (ONE - TWO);
-	Number_2048bit production_of_2048numbers = ONE * TWO;
-	unsigned int number = 150;
-	Number_2048bit production_of_2048number_on_int_number = ONE * number;
-	Number_2048bit square_of_2048number = THREE.square_128bit_Number();
-	Number_2048bit queotient_of_2048numbers;
-	(ONE > TWO) ? queotient_of_2048numbers = (ONE / TWO) : queotient_of_2048numbers = (TWO / ONE);
-	Number_2048bit remainder_of_2048numbers;
-	(ONE > TWO) ? remainder_of_2048numbers = (ONE % TWO) : remainder_of_2048numbers = (TWO % ONE);
-	std::cout << "sum of ONE and TWO is: " << Number_2048bit::convert_128number_to_hex(sum_of_2048numbers.return_number_as_array()) << '\n';
-	std::cout << "difference of ONE and TWO is: " << Number_2048bit::convert_128number_to_hex(difference_of_2048numbers.return_number_as_array()) << '\n';
-	std::cout << "production of ONE and TWO is: " << Number_2048bit::convert_128number_to_hex(production_of_2048numbers.return_number_as_array()) << '\n';
-	std::cout << "production of ONE const number is: " << Number_2048bit::convert_128number_to_hex(production_of_2048number_on_int_number.return_number_as_array()) << '\n';
-	std::cout << "square of THREE is: " << Number_2048bit::convert_128number_to_hex(square_of_2048number.return_number_as_array()) << '\n';
-	std::cout << "queotient of ONE and TWO is: " << Number_2048bit::convert_128number_to_hex(queotient_of_2048numbers.return_number_as_array()) << '\n';
-	std::cout << "remainder of ONE and TWO is: " << Number_2048bit::convert_128number_to_hex(remainder_of_2048numbers.return_number_as_array()) << '\n';
-	std::string a = "128"; // 296
-	std::string b = "100"; // 256
-	Number_2048bit A(a);
-	Number_2048bit B(b);
-	Number_2048bit power__of_numbers = A.power_function(B);
-	std::cout << "power of numbers A and B is: " << Number_2048bit::convert_128number_to_hex(power__of_numbers.return_number_as_array());
 }
 
  
