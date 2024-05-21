@@ -29,7 +29,7 @@ public:
 	Number_2048bit power_function(const Number_2048bit&);
 	Number_2048bit operator/ (const Number_2048bit&);
 	Number_2048bit shift_higher_bits_in_number(long int n) const; // shift n bit in whole number to higher bits (multiply on 2^pow)
-	Number_2048bit shift_lower_bit_in_number() const; // shift 1 bit in whole number to lower bits (divide on 2)
+	Number_2048bit shift_lower_bits_in_number(long int n) const; // shift n bit in whole number to lower bits (divide on 2^pow)
 	bool operator== (const Number_2048bit&) const;
 	bool operator!= (const Number_2048bit&) const;
 	bool operator> (const Number_2048bit&) const;
@@ -44,4 +44,7 @@ public:
 	bool if_number_even(); // check if number is even
 	Number_2048bit greatest_common_divisor(const Number_2048bit&);
 	Number_2048bit least_common_multiple(const Number_2048bit&);
+	Number_2048bit precalculated_value_of_mu();
+	Number_2048bit clear_Barrett_reduction(Number_2048bit& n_mod_number);
+
 };

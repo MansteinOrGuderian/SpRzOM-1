@@ -103,10 +103,12 @@ std::string Number_2048bit::convert_128number_to_binary(const Number_2048bit& Nu
 }
 
 unsigned int Number_2048bit::first_significant_not_null_cell_in_number_as_array() { //cell, where first significant digit stored
-	unsigned int current_length = size_of_number;
-	while (number_as_array[current_length - 1] == 0 && current_length--)
+	long int current_length = size_of_number;
+	while (number_as_array[current_length - 1] == 0) {
+		current_length--;
 		if (current_length == 0)
 			break;
+	}
 	return current_length;
 }
 
@@ -368,32 +370,44 @@ bool Number_2048bit::if_number_even() {
 	return (this->number_as_array[0] % 2 == 0) ? 1 : 0; // last "digit" is in index[0], because number stored in "reverse" order
 }
 
-Number_2048bit Number_2048bit::shift_lower_bit_in_number() const { // long int number_of_right_shift_bits
+Number_2048bit Number_2048bit::shift_lower_bits_in_number(long int number_of_right_shift_bits) const { 
 	unsigned int bit_carry = 0;
 	Number_2048bit result_of_shifting;
 	int current_position = size_of_number - 1;
 	while (current_position >= 0) {
-		result_of_shifting.number_as_array[current_position] = (number_as_array[current_position] >> 1) + (bit_carry << 31); // divide number by 2 and add "residue" from previous step
+		result_of_shifting.number_as_array[current_position] = (number_as_array[current_position] >> number_of_right_shift_bits) + (bit_carry << 31); // divide number by 2^w and add "residue" from previous step
 		bit_carry = (number_as_array[current_position] & 1); // if need something to add to next "digit" in number_as_array or not
 		current_position--;
 	}
 	return result_of_shifting;
 }
 
+
 Number_2048bit Number_2048bit::greatest_common_divisor(const Number_2048bit& Right_number_B) { // gcd(a, b)
-	if (*this == Number_2048bit{} || Right_number_B == Number_2048bit{}) // if 0
+	if (*this == Number_2048bit{} || Right_number_B == Number_2048bit{}) // if one of numbers == 0
 		return (*this == Number_2048bit{}) ? Right_number_B : *this;
-	if (*this == Number_2048bit("1") || Right_number_B == Number_2048bit("1")) // if 1
+	if (*this == Number_2048bit("1") || Right_number_B == Number_2048bit("1")) // if one of numbers == 1
 		return Number_2048bit("1");
 	Number_2048bit A_number = *this;
 	Number_2048bit B_number = Right_number_B;
 	Number_2048bit greatest_common_divisor("1");
-	unsigned int number_to_divide = 1;
+	unsigned int amount_of_bits_to_divide = 1; // shift n bit right
+	unsigned int amount_of_bits_to_multiple = 1; // shift n bit left
 	while (A_number.if_number_even() && B_number.if_number_even()) { // separating the common even part of numbers a, b
-		A_number = A_number.shift_lower_bit_in_number(number_to_divide);
-		B_number = B_number.shift_lower_bit_in_number(number_to_divide);
-
+		A_number = A_number.shift_lower_bits_in_number(amount_of_bits_to_divide); //  divide by 2
+		B_number = B_number.shift_lower_bits_in_number(amount_of_bits_to_divide); //  divide by 2
+		greatest_common_divisor = greatest_common_divisor.shift_higher_bits_in_number(amount_of_bits_to_multiple); // == greatest_common_divisor * 2;
 	}
+	while (A_number.if_number_even())
+		A_number = A_number.shift_lower_bits_in_number(amount_of_bits_to_divide); // divide by 2
+	while (B_number != Number_2048bit{}) { // while not 0, using Euclidean algorithm
+		while (B_number.if_number_even())
+			B_number = B_number.shift_lower_bits_in_number(amount_of_bits_to_divide); //  divide by 2
+		Number_2048bit temp_swap;
+		(A_number < B_number) ? (temp_swap = A_number, B_number = B_number - A_number) : (temp_swap = B_number, B_number = A_number - B_number); // a = min (a, b); b = |a - b|
+		A_number = temp_swap;
+	}
+	greatest_common_divisor = greatest_common_divisor * A_number;
 	return greatest_common_divisor;
 }
 
@@ -401,3 +415,45 @@ Number_2048bit Number_2048bit::least_common_multiple(const Number_2048bit& Right
 	return (*this * Right_number_B) / this->greatest_common_divisor(Right_number_B); // using properties of lcm:	lcm(a,b) = (a * b) / gcd(a, b) 
 }
 
+//long long int clear_Barret(long long int x_number, long long int n_mod_number, long long int base_scale) {
+//	long long int k_digit_number = return_countDigit_in_number(n_mod_number);
+//	if (!n_mod_number)
+//		return -1;
+//	long long int hard_division_niu = (int)pow(base_scale, k_digit_number) / (2 * n_mod_number);
+//	long long int q1, q2, q3, result;
+//	q1 = x_number / pow(base_scale, k_digit_number - 1);
+//	q2 = q1 * hard_division_niu;
+//	q3 = q2 / pow(base_scale, k_digit_number + 1);
+//	result = x_number - q3 * n_mod_number;
+//	while (result >= n_mod_number) {
+//		result -= n_mod_number;
+//	}
+//	return result;
+//}
+
+Number_2048bit Number_2048bit::precalculated_value_of_mu() {
+	unsigned int k_degree_of_beta = this->first_significant_not_null_cell_in_number_as_array();
+	Number_2048bit beta_in_degree("1");
+	unsigned int degree_of_beta = 2 * k_degree_of_beta;
+	beta_in_degree = (beta_in_degree << degree_of_beta); // multiply \{betta} 2*k times
+	//std::cout << beta_in_degree << '\n';
+	Number_2048bit mu = beta_in_degree / *this;
+	return mu;
+}
+
+Number_2048bit Number_2048bit::clear_Barrett_reduction(Number_2048bit& n_mod_number) { // work with numbers, that have k ~ 2k digits
+	if (*this < n_mod_number)
+		return *this; // *this == X
+	Number_2048bit m_number = n_mod_number.precalculated_value_of_mu();
+
+	long int length_of_n_mod = n_mod_number.first_significant_not_null_cell_in_number_as_array();
+	Number_2048bit x_number = *this;
+	Number_2048bit q_number = (x_number >> (length_of_n_mod - 1)); // killing last (k - 1) digits of x
+	q_number = q_number * m_number;
+	q_number = (q_number >> (length_of_n_mod + 1)); // killing last (k + 1) digits of q
+	Number_2048bit result_of_Barrett = (x_number - (q_number * n_mod_number));
+	while (result_of_Barrett >= n_mod_number)
+		result_of_Barrett = result_of_Barrett - n_mod_number;
+
+	return result_of_Barrett; // x mod n
+}

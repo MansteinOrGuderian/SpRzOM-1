@@ -29,10 +29,12 @@ int main() {
 	std::cout << Number_2048bit::convert_128number_to_hex(a_sum_n_times.return_number_as_array()) << "\n\n";
 	std::cout << Number_2048bit::convert_128number_to_hex(a_mult.return_number_as_array()) << "\n\n";*/
 
-	std::string number = "0";
-	Number_2048bit Number(number);
-	std::cout << ONE.greatest_common_divisor(Number, Number);
-	
+	std::string number_mod = "75bcfcaefbca";
+	Number_2048bit Number_mod(number_one);
+	std::string number2 = "ab43897bfeccd983e";
+	Number_2048bit Number2(number_two);
+	//std::cout << Number.greatest_common_divisor(Number2);
+	std::cout << Number_2048bit::convert_128number_to_hex(Number2.clear_Barrett_reduction(Number_mod).return_number_as_array());
 }
 
  
