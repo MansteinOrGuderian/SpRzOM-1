@@ -465,7 +465,15 @@ Number_2048bit Number_2048bit::square_128bit_Number_with_Barrett(Number_2048bit&
 }
 
 Number_2048bit Number_2048bit::power_to_degree_with_Barrett(Number_2048bit& power_number, Number_2048bit& n_mod_number){
-	Number_2048bit result;
-
+	Number_2048bit result("1");
+	Number_2048bit base_number = this->clear_Barrett_reduction(n_mod_number);
+	std::string degree_number_as_binary = convert_128number_to_binary(power_number);
+	int current_index_of_power = degree_number_as_binary.length() - 1; // from highest to lowest
+	while (current_index_of_power >= 0) {
+		if (degree_number_as_binary[current_index_of_power] == '1')
+			result = (result * base_number).clear_Barrett_reduction(n_mod_number);
+		base_number = (base_number.square_128bit_Number()).clear_Barrett_reduction(n_mod_number);
+		current_index_of_power--;
+	}
 	return result;
 }
