@@ -316,7 +316,7 @@ Number_2048bit Number_2048bit::shift_higher_bits_in_number(long int number_of_le
 		int current_position = size_of_number - 1;
 		while (current_position >= amount_of_full_integer_bit_cells) {
 			result_of_shifting.number_as_array[current_position] = number_as_array[current_position - amount_of_full_integer_bit_cells]; //shifting values left
-			current_position--; 
+			current_position--;
 		}
 		current_position = 0;
 		while (current_position < amount_of_full_integer_bit_cells) {
@@ -368,23 +368,36 @@ bool Number_2048bit::if_number_even() {
 	return (this->number_as_array[0] % 2 == 0) ? 1 : 0; // last "digit" is in index[0], because number stored in "reverse" order
 }
 
-Number_2048bit Number_2048bit::shift_lower_bits_in_number(long int number_of_right_shift_bits) const {
+Number_2048bit Number_2048bit::shift_lower_bit_in_number() const { // long int number_of_right_shift_bits
 	unsigned int bit_carry = 0;
 	Number_2048bit result_of_shifting;
 	int current_position = size_of_number - 1;
 	while (current_position >= 0) {
-		result_of_shifting.number_as_array[current_position] = (number_as_array[current_position] >> 1) + (bit_carry << 31); // divide number by 2 and add
-		bit_carry = (number_as_array[current_position] & 1); // control the last 
+		result_of_shifting.number_as_array[current_position] = (number_as_array[current_position] >> 1) + (bit_carry << 31); // divide number by 2 and add "residue" from previous step
+		bit_carry = (number_as_array[current_position] & 1); // if need something to add to next "digit" in number_as_array or not
 		current_position--;
 	}
 	return result_of_shifting;
 }
 
-Number_2048bit Number_2048bit::greatest_common_divisor(const Number_2048bit& A_number, const Number_2048bit& B_number) { // gcd(a, b)
-	return *this;
+Number_2048bit Number_2048bit::greatest_common_divisor(const Number_2048bit& Right_number_B) { // gcd(a, b)
+	if (*this == Number_2048bit{} || Right_number_B == Number_2048bit{}) // if 0
+		return (*this == Number_2048bit{}) ? Right_number_B : *this;
+	if (*this == Number_2048bit("1") || Right_number_B == Number_2048bit("1")) // if 1
+		return Number_2048bit("1");
+	Number_2048bit A_number = *this;
+	Number_2048bit B_number = Right_number_B;
+	Number_2048bit greatest_common_divisor("1");
+	unsigned int number_to_divide = 1;
+	while (A_number.if_number_even() && B_number.if_number_even()) { // separating the common even part of numbers a, b
+		A_number = A_number.shift_lower_bit_in_number(number_to_divide);
+		B_number = B_number.shift_lower_bit_in_number(number_to_divide);
+
+	}
+	return greatest_common_divisor;
 }
 
-Number_2048bit Number_2048bit::least_common_multiple(const Number_2048bit& A_number, const Number_2048bit& B_number) { // lcm(a, b)
-	return (*this * B_number) / greatest_common_divisor(*this, B_number); // using properties of lcm:	lcm(a,b) = (a * b) / gcd(a, b) 
+Number_2048bit Number_2048bit::least_common_multiple(const Number_2048bit& Right_number_B) { // lcm(a, b)
+	return (*this * Right_number_B) / this->greatest_common_divisor(Right_number_B); // using properties of lcm:	lcm(a,b) = (a * b) / gcd(a, b) 
 }
 

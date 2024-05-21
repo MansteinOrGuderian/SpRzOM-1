@@ -29,17 +29,9 @@ int main() {
 	std::cout << Number_2048bit::convert_128number_to_hex(a_sum_n_times.return_number_as_array()) << "\n\n";
 	std::cout << Number_2048bit::convert_128number_to_hex(a_mult.return_number_as_array()) << "\n\n";*/
 
-	std::string number = "fffffffffffff"; // 4294967295 1048575
+	std::string number = "0";
 	Number_2048bit Number(number);
-	std::cout << Number << "\n\n";
-	std::cout << Number.shift_lower_bits_in_number(1) << "\n\n";
-	// step 1 ... 125: result = (0 >> 1) + bit_carry 
-	// bit_carry = 0 & 1 -> bit_carry = 0
-	// step 126: result[current_position] = (1048575 >> 1 ) + 0 // 1111 1111 1111 1111 1111 -> 1111 1111 1111 1111 111
-	// bit_carry = 1111 1111 1111 1111 1111 & 1 // 1 = 0000 0000 0000 0001 -> bit_carry = 1
-	// step 127: result[current_position] = (4294967295 >> 1) + (1 << 31) // 7fffffff + 80000000 -> result[current_position] = 4294967295 // as was
-	// bit_carry = 1111 1111 1111 1111 1111 1111 1111 1111 & 1 -> bit_carry = 1
-	std::cout << Number.if_number_even();
+	std::cout << ONE.greatest_common_divisor(Number, Number);
 	
 }
 
