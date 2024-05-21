@@ -382,7 +382,6 @@ Number_2048bit Number_2048bit::shift_lower_bits_in_number(long int number_of_rig
 	return result_of_shifting;
 }
 
-
 Number_2048bit Number_2048bit::greatest_common_divisor(const Number_2048bit& Right_number_B) { // gcd(a, b)
 	if (*this == Number_2048bit{} || Right_number_B == Number_2048bit{}) // if one of numbers == 0
 		return (*this == Number_2048bit{}) ? Right_number_B : *this;
@@ -415,22 +414,6 @@ Number_2048bit Number_2048bit::least_common_multiple(const Number_2048bit& Right
 	return (*this * Right_number_B) / this->greatest_common_divisor(Right_number_B); // using properties of lcm:	lcm(a,b) = (a * b) / gcd(a, b) 
 }
 
-//long long int clear_Barret(long long int x_number, long long int n_mod_number, long long int base_scale) {
-//	long long int k_digit_number = return_countDigit_in_number(n_mod_number);
-//	if (!n_mod_number)
-//		return -1;
-//	long long int hard_division_niu = (int)pow(base_scale, k_digit_number) / (2 * n_mod_number);
-//	long long int q1, q2, q3, result;
-//	q1 = x_number / pow(base_scale, k_digit_number - 1);
-//	q2 = q1 * hard_division_niu;
-//	q3 = q2 / pow(base_scale, k_digit_number + 1);
-//	result = x_number - q3 * n_mod_number;
-//	while (result >= n_mod_number) {
-//		result -= n_mod_number;
-//	}
-//	return result;
-//}
-
 Number_2048bit Number_2048bit::precalculated_value_of_mu() {
 	unsigned int k_degree_of_beta = this->first_significant_not_null_cell_in_number_as_array();
 	Number_2048bit beta_in_degree("1");
@@ -445,7 +428,7 @@ Number_2048bit Number_2048bit::clear_Barrett_reduction(Number_2048bit& n_mod_num
 	if (*this < n_mod_number)
 		return *this; // *this == X
 	Number_2048bit m_number = n_mod_number.precalculated_value_of_mu();
-
+	
 	long int length_of_n_mod = n_mod_number.first_significant_not_null_cell_in_number_as_array();
 	Number_2048bit x_number = *this;
 	Number_2048bit q_number = (x_number >> (length_of_n_mod - 1)); // killing last (k - 1) digits of x
@@ -456,4 +439,33 @@ Number_2048bit Number_2048bit::clear_Barrett_reduction(Number_2048bit& n_mod_num
 		result_of_Barrett = result_of_Barrett - n_mod_number;
 
 	return result_of_Barrett; // x mod n
+}
+
+Number_2048bit Number_2048bit::sum_with_Barrett(Number_2048bit& Right_number, Number_2048bit& n_mod_number) {
+	Number_2048bit result_of_summing = *this + Right_number;
+	if (result_of_summing >= n_mod_number)
+		result_of_summing = result_of_summing.clear_Barrett_reduction(n_mod_number);
+	return result_of_summing;
+}
+
+Number_2048bit Number_2048bit::substact_with_Barrett(Number_2048bit& Right_number, Number_2048bit& n_mod_number) {
+	Number_2048bit result_of_subtraction;
+	(*this >= Right_number) ? (result_of_subtraction = (*this - Right_number)) : (result_of_subtraction = (*this + (n_mod_number - Right_number))); // to avoid negative values
+	return result_of_subtraction;
+}
+
+Number_2048bit Number_2048bit::multiply_with_Barrett(Number_2048bit& Right_number,  Number_2048bit& n_mod_number) {
+	Number_2048bit result_of_multiplication = *this * Right_number;
+	if (result_of_multiplication >= n_mod_number)
+		result_of_multiplication = result_of_multiplication.clear_Barrett_reduction(n_mod_number);
+	return result_of_multiplication;
+}
+Number_2048bit Number_2048bit::square_128bit_Number_with_Barrett(Number_2048bit& n_mod_number) {
+	return (this->multiply_with_Barrett(*this, n_mod_number));
+}
+
+Number_2048bit Number_2048bit::power_to_degree_with_Barrett(Number_2048bit& power_number, Number_2048bit& n_mod_number){
+	Number_2048bit result;
+
+	return result;
 }

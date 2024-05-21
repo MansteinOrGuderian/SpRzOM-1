@@ -46,5 +46,9 @@ public:
 	Number_2048bit least_common_multiple(const Number_2048bit&);
 	Number_2048bit precalculated_value_of_mu();
 	Number_2048bit clear_Barrett_reduction(Number_2048bit& n_mod_number);
-
+	Number_2048bit sum_with_Barrett(Number_2048bit&, Number_2048bit& n_mod_number);
+	Number_2048bit substact_with_Barrett(Number_2048bit&, Number_2048bit& n_mod_number);
+	Number_2048bit multiply_with_Barrett(Number_2048bit&, Number_2048bit& n_mod_number);
+	Number_2048bit power_to_degree_with_Barrett(Number_2048bit&, Number_2048bit& n_mod_number);
+	Number_2048bit square_128bit_Number_with_Barrett(Number_2048bit& n_mod_number);
 };

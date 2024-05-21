@@ -35,6 +35,7 @@ int main() {
 	Number_2048bit Number2(number_two);
 	//std::cout << Number.greatest_common_divisor(Number2);
 	std::cout << Number_2048bit::convert_128number_to_hex(Number2.clear_Barrett_reduction(Number_mod).return_number_as_array());
+	
 }
 
  
