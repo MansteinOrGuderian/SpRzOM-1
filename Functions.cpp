@@ -1,7 +1,7 @@
 #include "Header.h"
 
 double MeasureTime(std::function<void()> operation, unsigned int amount_of_measurements) {
-	double* time_for_all_tryes = new double[amount_of_measurements + 1];
+	double* time_for_all_tryes = new double[amount_of_measurements + 1]{};
 	int current_measurement = 0;
 	while (current_measurement < amount_of_measurements) {
 		auto start_time = std::chrono::high_resolution_clock::now();
@@ -9,8 +9,10 @@ double MeasureTime(std::function<void()> operation, unsigned int amount_of_measu
 		auto end_time = std::chrono::high_resolution_clock::now();
 		std::chrono::duration<double> elapsed_time = end_time - start_time;
 		time_for_all_tryes[current_measurement] = elapsed_time.count();
+		std::cout << time_for_all_tryes[current_measurement] << '\n';
 		time_for_all_tryes[amount_of_measurements] += time_for_all_tryes[current_measurement];
 		current_measurement++;
+		std::cout << "Total:\t" << time_for_all_tryes[amount_of_measurements] << '\n';
 	}
 	double average_time = (time_for_all_tryes[amount_of_measurements] / amount_of_measurements);
 	delete[] time_for_all_tryes;
@@ -117,13 +119,13 @@ Number_2048bit Number_2048bit::operator- (const Number_2048bit& Right_number) {
 	Number_2048bit result_of_subtraction;
 	unsigned int current_index_position = 0;
 	while (current_index_position < size_of_number) {
-		long long int temp = ((unsigned long long int)number_as_array[current_index_position]) - ((unsigned long long int)Right_number.number_as_array[current_index_position]) - ((unsigned long long int)bit_borrow);
+		long long int temp = ((long long int)number_as_array[current_index_position]) - ((long long int)Right_number.number_as_array[current_index_position]) - ((long long int)bit_borrow);
 		if (temp >= 0) {
 			result_of_subtraction.number_as_array[current_index_position] = ((unsigned int)temp);
 			bit_borrow = 0;
 		}
 		else {
-			result_of_subtraction.number_as_array[current_index_position] = ((unsigned int)(temp + 0xFFFFFFFF + 1)); // (2^32 - 1) = 4294967295 -> 2^32 = 4294967295 + 1
+			result_of_subtraction.number_as_array[current_index_position] = ((unsigned int)(0xFFFFFFFF + temp + 1)); // (2^32 - 1) = 4294967295 -> 2^32 = 4294967295 + 1
 			bit_borrow = 1;
 		}
 		current_index_position++;
@@ -194,7 +196,7 @@ Number_2048bit Number_2048bit::operator* (const Number_2048bit& Right_number) {
 	while (current_cell_index_right_number < size_of_number) {
 		Number_2048bit temp = *this * Right_number.number_as_array[current_cell_index_right_number]; 
 		temp = (temp << current_cell_index_right_number); // left shift == multiplication on degree of 2
-		result_of_multiplication = result_of_multiplication + temp; // adding operator will be overloaded soon
+		result_of_multiplication = result_of_multiplication + temp; 
 		current_cell_index_right_number++;
 	}
 	return result_of_multiplication;
@@ -417,8 +419,7 @@ Number_2048bit Number_2048bit::least_common_multiple(const Number_2048bit& Right
 Number_2048bit Number_2048bit::precalculated_value_of_mu() {
 	unsigned int k_degree_of_beta = this->first_significant_not_null_cell_in_number_as_array();
 	Number_2048bit beta_in_degree("1");
-	unsigned int degree_of_beta = 2 * k_degree_of_beta;
-	beta_in_degree = (beta_in_degree << degree_of_beta); // multiply \{betta} 2*k times
+	beta_in_degree = (beta_in_degree << (2 * k_degree_of_beta)); // multiply \{betta} 2*k times
 	//std::cout << beta_in_degree << '\n';
 	Number_2048bit mu = beta_in_degree / *this;
 	return mu;
@@ -428,12 +429,12 @@ Number_2048bit Number_2048bit::clear_Barrett_reduction(Number_2048bit& n_mod_num
 	if (*this < n_mod_number)
 		return *this; // *this == X
 	Number_2048bit m_number = n_mod_number.precalculated_value_of_mu();
-	
-	long int length_of_n_mod = n_mod_number.first_significant_not_null_cell_in_number_as_array();
+	long int length_of_n_mod = n_mod_number.first_significant_not_null_cell_in_number_as_array(); // k
 	Number_2048bit x_number = *this;
-	Number_2048bit q_number = (x_number >> (length_of_n_mod - 1)); // killing last (k - 1) digits of x
+
+	Number_2048bit q_number = (x_number >> (unsigned int)(length_of_n_mod - 1)); // killing last (k - 1) digits of x
 	q_number = q_number * m_number;
-	q_number = (q_number >> (length_of_n_mod + 1)); // killing last (k + 1) digits of q
+	q_number = (q_number >> (unsigned int)(length_of_n_mod + 1)); // killing last (k + 1) digits of q
 	Number_2048bit result_of_Barrett = (x_number - (q_number * n_mod_number));
 	while (result_of_Barrett >= n_mod_number)
 		result_of_Barrett = result_of_Barrett - n_mod_number;
@@ -444,36 +445,39 @@ Number_2048bit Number_2048bit::clear_Barrett_reduction(Number_2048bit& n_mod_num
 Number_2048bit Number_2048bit::sum_with_Barrett(Number_2048bit& Right_number, Number_2048bit& n_mod_number) {
 	Number_2048bit result_of_summing = *this + Right_number;
 	if (result_of_summing >= n_mod_number)
-		result_of_summing = result_of_summing.clear_Barrett_reduction(n_mod_number);
-	return result_of_summing;
+		result_of_summing = result_of_summing.clear_Barrett_reduction(n_mod_number); // % n_mod_number;
+	return result_of_summing; // (a + b) mod n
 }
 
 Number_2048bit Number_2048bit::substact_with_Barrett(Number_2048bit& Right_number, Number_2048bit& n_mod_number) {
 	Number_2048bit result_of_subtraction;
 	(*this >= Right_number) ? (result_of_subtraction = (*this - Right_number)) : (result_of_subtraction = (*this + (n_mod_number - Right_number))); // to avoid negative values
-	return result_of_subtraction;
+	result_of_subtraction = result_of_subtraction.clear_Barrett_reduction(n_mod_number);  // % n_mod_number;
+	return result_of_subtraction; // (a - b) mod n
 }
 
 Number_2048bit Number_2048bit::multiply_with_Barrett(Number_2048bit& Right_number,  Number_2048bit& n_mod_number) {
-	Number_2048bit result_of_multiplication = *this * Right_number;
+	Number_2048bit result_of_multiplication{};
+	result_of_multiplication = *this * Right_number;
 	if (result_of_multiplication >= n_mod_number)
-		result_of_multiplication = result_of_multiplication.clear_Barrett_reduction(n_mod_number);
-	return result_of_multiplication;
+		result_of_multiplication = result_of_multiplication.clear_Barrett_reduction(n_mod_number); // % n_mod_number;
+	return result_of_multiplication; // (a * b) mod n
 }
+
 Number_2048bit Number_2048bit::square_128bit_Number_with_Barrett(Number_2048bit& n_mod_number) {
-	return (this->multiply_with_Barrett(*this, n_mod_number));
+	return (this->multiply_with_Barrett(*this, n_mod_number)); // a^2 mod n
 }
 
 Number_2048bit Number_2048bit::power_to_degree_with_Barrett(Number_2048bit& power_number, Number_2048bit& n_mod_number){
 	Number_2048bit result("1");
-	Number_2048bit base_number = this->clear_Barrett_reduction(n_mod_number);
+	Number_2048bit base_number = this->clear_Barrett_reduction(n_mod_number);  // % n_mod_number;
 	std::string degree_number_as_binary = convert_128number_to_binary(power_number);
 	int current_index_of_power = degree_number_as_binary.length() - 1; // from highest to lowest
 	while (current_index_of_power >= 0) {
 		if (degree_number_as_binary[current_index_of_power] == '1')
-			result = (result * base_number).clear_Barrett_reduction(n_mod_number);
-		base_number = (base_number.square_128bit_Number()).clear_Barrett_reduction(n_mod_number);
+			result = (result * base_number).clear_Barrett_reduction(n_mod_number); // % n_mod_number;
+		base_number = (base_number.square_128bit_Number()).clear_Barrett_reduction(n_mod_number);  // % n_mod_number;
 		current_index_of_power--;
 	}
-	return result;
+	return result; // a^b mod n
 }
