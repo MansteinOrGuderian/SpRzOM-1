@@ -46,7 +46,7 @@ unsigned int* Number_2048bit::convert_128number_from_hex(const std::string numbe
 	return array_of_properly_numbers;
 }
 
-std::string Number_2048bit::convert_128number_to_hex(unsigned int* number_as_array) { 
+std::string Number_2048bit::convert_128number_to_hex(unsigned int* number_as_array) {
 	unsigned int* logic_order_number_as_array = new unsigned int[size_of_number];
 	int current_position = size_of_number - 1;
 	while (current_position >= 0) {
@@ -77,7 +77,7 @@ std::string Number_2048bit::convert_128number_to_hex(unsigned int* number_as_arr
 	unsigned int index_of_first_significant_digit = number_as_hex_string_result.find_first_not_of('0'); // index, before which delete all 0
 	if (index_of_first_significant_digit != -1) // if not empty string
 		number_as_hex_string_result.erase(number_as_hex_string_result.begin(), number_as_hex_string_result.begin() + index_of_first_significant_digit);
-		//number_as_hex_string_result = number_as_hex_string_result.substr(index_of_first_significant_digit);
+	//number_as_hex_string_result = number_as_hex_string_result.substr(index_of_first_significant_digit);
 	else
 		number_as_hex_string_result = "0";
 	return number_as_hex_string_result;
@@ -194,9 +194,9 @@ Number_2048bit Number_2048bit::operator* (const Number_2048bit& Right_number) {
 	Number_2048bit result_of_multiplication("0");
 	unsigned int current_cell_index_right_number = 0;
 	while (current_cell_index_right_number < size_of_number) {
-		Number_2048bit temp = *this * Right_number.number_as_array[current_cell_index_right_number]; 
+		Number_2048bit temp = *this * Right_number.number_as_array[current_cell_index_right_number];
 		temp = (temp << current_cell_index_right_number); // left shift == multiplication on degree of 2
-		result_of_multiplication = result_of_multiplication + temp; 
+		result_of_multiplication = result_of_multiplication + temp;
 		current_cell_index_right_number++;
 	}
 	return result_of_multiplication;
@@ -213,7 +213,7 @@ Number_2048bit Number_2048bit::power_function(const Number_2048bit& power_number
 	int current_index_of_power = degree_number_as_binary.length() - 1; // from highest to lowest
 	while (current_index_of_power >= 0) {
 		if (degree_number_as_binary[current_index_of_power] == '1')
-			result = result * base_number; 
+			result = result * base_number;
 		if (current_index_of_power > 0)
 			base_number = base_number.square_128bit_Number();
 		current_index_of_power--;
@@ -234,14 +234,14 @@ bool Number_2048bit::operator> (const Number_2048bit& Right_number) const { // L
 			return (number_as_array[current_position] > Right_number.number_as_array[current_position]);
 		current_position--;
 	}
-	return false; 
+	return false;
 }
 
-bool Number_2048bit::operator< (const Number_2048bit& Right_number) const{
+bool Number_2048bit::operator< (const Number_2048bit& Right_number) const {
 	int current_position = size_of_number - 1;
 	while (current_position >= 0) {
 		if (number_as_array[current_position] != Right_number.number_as_array[current_position])
-			return (number_as_array[current_position] < Right_number.number_as_array[current_position]); 
+			return (number_as_array[current_position] < Right_number.number_as_array[current_position]);
 		current_position--;
 	}
 	return false;
@@ -251,7 +251,7 @@ bool Number_2048bit::operator!= (const Number_2048bit& Right_number) const {
 	return !(*this == Right_number);
 }
 
-bool Number_2048bit::operator== (const Number_2048bit& Right_number) const{
+bool Number_2048bit::operator== (const Number_2048bit& Right_number) const {
 	int current_position = size_of_number - 1;
 	while (current_position >= 0) {
 		if (number_as_array[current_position] != Right_number.number_as_array[current_position])
@@ -262,14 +262,14 @@ bool Number_2048bit::operator== (const Number_2048bit& Right_number) const{
 }
 
 bool Number_2048bit::operator>= (const Number_2048bit& Right_number) const { // *this >= Right_number
-	return ! (*this < Right_number);
+	return !(*this < Right_number);
 }
 
 bool Number_2048bit::operator<= (const Number_2048bit& Right_number) const { // *this <= Right_number
 	return !(*this > Right_number);
 }
 
-unsigned int Number_2048bit::length_of_number_in_bits() const{
+unsigned int Number_2048bit::length_of_number_in_bits() const {
 	unsigned int length_in_bits = 32 * size_of_number; //max possible size
 	int current_position = size_of_number - 1;
 	while (current_position >= 0) {
@@ -372,7 +372,7 @@ bool Number_2048bit::if_number_even() {
 	return (this->number_as_array[0] % 2 == 0) ? 1 : 0; // last "digit" is in index[0], because number stored in "reverse" order
 }
 
-Number_2048bit Number_2048bit::shift_lower_bits_in_number(long int number_of_right_shift_bits) const { 
+Number_2048bit Number_2048bit::shift_lower_bits_in_number(long int number_of_right_shift_bits) const {
 	unsigned int bit_carry = 0;
 	Number_2048bit result_of_shifting;
 	int current_position = size_of_number - 1;
@@ -456,7 +456,7 @@ Number_2048bit Number_2048bit::substact_with_Barrett(Number_2048bit& Right_numbe
 	return result_of_subtraction; // (a - b) mod n
 }
 
-Number_2048bit Number_2048bit::multiply_with_Barrett(Number_2048bit& Right_number,  Number_2048bit& n_mod_number) {
+Number_2048bit Number_2048bit::multiply_with_Barrett(Number_2048bit& Right_number, Number_2048bit& n_mod_number) {
 	Number_2048bit result_of_multiplication{};
 	result_of_multiplication = *this * Right_number;
 	if (result_of_multiplication >= n_mod_number)
@@ -468,7 +468,7 @@ Number_2048bit Number_2048bit::square_128bit_Number_with_Barrett(Number_2048bit&
 	return (this->multiply_with_Barrett(*this, n_mod_number)); // a^2 mod n
 }
 
-Number_2048bit Number_2048bit::power_to_degree_with_Barrett(Number_2048bit& power_number, Number_2048bit& n_mod_number){
+Number_2048bit Number_2048bit::power_to_degree_with_Barrett(Number_2048bit& power_number, Number_2048bit& n_mod_number) {
 	Number_2048bit result("1");
 	Number_2048bit base_number = this->clear_Barrett_reduction(n_mod_number);  // % n_mod_number;
 	std::string degree_number_as_binary = convert_128number_to_binary(power_number);
