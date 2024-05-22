@@ -451,16 +451,16 @@ Number_2048bit Number_2048bit::sum_with_Barrett(Number_2048bit& Right_number, Nu
 
 Number_2048bit Number_2048bit::substact_with_Barrett(Number_2048bit& Right_number, Number_2048bit& n_mod_number) {
 	Number_2048bit result_of_subtraction;
-	(*this >= Right_number) ? (result_of_subtraction = (*this - Right_number)) : (result_of_subtraction = (*this + (n_mod_number - Right_number))); // to avoid negative values
+	(*this >= Right_number) ? (result_of_subtraction = (*this - Right_number)) : (result_of_subtraction = (*this + n_mod_number - (Right_number % n_mod_number))); // to avoid negative values exsample : by modulo is -2 mod 5 = 3
 	result_of_subtraction = result_of_subtraction.clear_Barrett_reduction(n_mod_number);  // % n_mod_number;
 	return result_of_subtraction; // (a - b) mod n
 }
 
 Number_2048bit Number_2048bit::multiply_with_Barrett(Number_2048bit& Right_number, Number_2048bit& n_mod_number) {
 	Number_2048bit result_of_multiplication{};
-	result_of_multiplication = *this * Right_number;
+	result_of_multiplication = this->clear_Barrett_reduction(n_mod_number) * Right_number.clear_Barrett_reduction(n_mod_number);
 	if (result_of_multiplication >= n_mod_number)
-		result_of_multiplication = result_of_multiplication.clear_Barrett_reduction(n_mod_number); // % n_mod_number;
+		result_of_multiplication = result_of_multiplication.clear_Barrett_reduction(n_mod_number);  // % n_mod_number;
 	return result_of_multiplication; // (a * b) mod n
 }
 
