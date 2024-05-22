@@ -51,10 +51,8 @@ int main() {
 	std::cout << "SUM is:\t" << Number_2048bit::convert_128number_to_hex(sum_of_ONE_and_TWO_mod_FOUR.return_number_as_array()) << '\n';
 	Number_2048bit difference_of_TWO_and_ONE_mod_FOUR = TWO.substact_with_Barrett(ONE, FOUR);
 	std::cout << "Difference is:\t" << Number_2048bit::convert_128number_to_hex(difference_of_TWO_and_ONE_mod_FOUR.return_number_as_array()) << '\n';
-	//Number_2048bit multiply_of_ONE_and_TWO_mod_FOUR = ONE.multiply_with_Barrett(TWO, FOUR); // +
-	//std::cout << "Multiply is:\t" << Number_2048bit::convert_128number_to_hex(multiply_of_ONE_and_TWO_mod_FOUR.return_number_as_array()) << '\n';
-	std::string result = "489ef9d689bf01c91e5cbc1be3dd1706576f683489a57cd2cd9148639706613f1abaffac1f94cc38d0bccc6c62a2d1f991c9ab30a1293e4870fd1c36b46b350d4b466";
-	std::cout << "Multiply is:\t" << result << '\n';
+	Number_2048bit multiply_of_ONE_and_TWO_mod_FOUR = ONE.multiply_with_Barrett(TWO, FOUR); // +
+	std::cout << "Multiply is:\t" << Number_2048bit::convert_128number_to_hex(multiply_of_ONE_and_TWO_mod_FOUR.return_number_as_array()) << '\n';
 	Number_2048bit power_ONE_to_degree_TWO_mod_FOUR = ONE.power_to_degree_with_Barrett(TWO, FOUR); // +
 	std::cout << "Power is:\t" << Number_2048bit::convert_128number_to_hex(power_ONE_to_degree_TWO_mod_FOUR.return_number_as_array()) << '\n';
 }
